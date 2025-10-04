@@ -22,11 +22,11 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         description:
             'Pomóż nam posprzątać park miejski! Będziemy zbierać śmieci, grabić liście i dbać o czystość naszego wspólnego miejsca.',
         organization: 'Zielone Miasto',
-        location: 'Park Centralny, Warszawa',
+        location: 'Park Centralny, Kraków',
         date: DateTime.now().add(const Duration(days: 7)),
         requiredVolunteers: 15,
-        categories: ['Ekologia', 'Społeczność lokalna'],
-        imageUrl: null,
+        categories: ['Środowisko', 'Społeczność lokalna'],
+        createdAt: DateTime.now(),
       ),
       VolunteerEventModel(
         id: '2',
@@ -38,7 +38,7 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         date: DateTime.now().add(const Duration(days: 3)),
         requiredVolunteers: 8,
         categories: ['Zwierzęta', 'Opieka'],
-        imageUrl: null,
+        createdAt: DateTime.now(),
       ),
       VolunteerEventModel(
         id: '3',
@@ -46,11 +46,11 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         description:
             'Organizujemy warsztaty artystyczne dla dzieci. Potrzebujemy osób, które pomogą w prowadzeniu zajęć, przygotowaniu materiałów i opiece nad uczestnikami.',
         organization: 'Fundacja Uśmiech Dziecka',
-        location: 'Świetlica Środowiskowa, Gdańsk',
+        location: 'Świetlica Środowiskowa, Kraków',
         date: DateTime.now().add(const Duration(days: 14)),
         requiredVolunteers: 6,
-        categories: ['Dzieci', 'Edukacja', 'Sztuka'],
-        imageUrl: null,
+        categories: ['Edukacja', 'Kultura'],
+        createdAt: DateTime.now(),
       ),
       VolunteerEventModel(
         id: '4',
@@ -58,11 +58,11 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         description:
             'Pomóż nam w organizacji zbiórki żywności. Będziemy przyjmować dary, sortować produkty i pakować paczki dla rodzin w trudnej sytuacji.',
         organization: 'Bank Żywności',
-        location: 'Magazyn przy ul. Solidarności, Poznań',
+        location: 'Magazyn przy ul. Solidarności, Kraków',
         date: DateTime.now().add(const Duration(days: 5)),
         requiredVolunteers: 20,
-        categories: ['Pomoc społeczna', 'Żywność'],
-        imageUrl: null,
+        categories: ['Pomoc społeczna'],
+        createdAt: DateTime.now(),
       ),
       VolunteerEventModel(
         id: '5',
@@ -70,11 +70,11 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         description:
             'Program wsparcia dla samotnych seniorów. Wolontariusze pomagają w robieniu zakupów, spacerach i spędzają czas na rozmowach.',
         organization: 'Srebrna Jesień',
-        location: 'Różne lokalizacje w Wrocławiu',
+        location: 'Różne lokalizacje w Krakowie',
         date: DateTime.now().add(const Duration(days: 2)),
         requiredVolunteers: 10,
-        categories: ['Seniorzy', 'Pomoc społeczna'],
-        imageUrl: null,
+        categories: ['Zdrowie', 'Pomoc społeczna'],
+        createdAt: DateTime.now(),
       ),
     ];
   }

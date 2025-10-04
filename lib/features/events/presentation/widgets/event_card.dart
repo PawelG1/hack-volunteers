@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/volunteer_event.dart';
 import 'package:intl/intl.dart';
 
@@ -281,22 +282,8 @@ class _EventCardState extends State<EventCard> {
   }
 
   Color _getCategoryColor(String? category) {
-    switch (category?.toLowerCase()) {
-      case 'zwierzęta':
-        return Colors.orange.shade400;
-      case 'środowisko':
-        return Colors.green.shade500;
-      case 'edukacja':
-        return Colors.blue.shade500;
-      case 'sport':
-        return Colors.red.shade400;
-      case 'kultura':
-        return Colors.purple.shade400;
-      case 'pomoc społeczna':
-        return Colors.teal.shade400;
-      default:
-        return Colors.indigo.shade400;
-    }
+    if (category == null) return AppColors.other;
+    return AppColors.getCategoryColor(category);
   }
 
   IconData _getCategoryIcon(String? category) {

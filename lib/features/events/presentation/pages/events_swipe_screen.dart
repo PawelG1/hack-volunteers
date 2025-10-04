@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../bloc/events_bloc.dart';
 import '../bloc/events_event.dart';
 import '../bloc/events_state.dart';
@@ -12,32 +13,52 @@ class EventsSwipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.volunteer_activism,
-              color: Colors.red.shade400,
-              size: 28,
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'VolunTinder',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
+            // Logo "Młody Kraków"
+            Image.asset(
+              'assets/images/mlody_krakow_horizontal.png',
+              height: 40,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback if logo is not available
+                return Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.volunteer_activism,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Młody Kraków',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 0,
+        elevation: 2,
         shadowColor: Colors.black12,
       ),
       body: BlocConsumer<EventsBloc, EventsState>(
@@ -223,7 +244,7 @@ class EventsSwipeScreen extends StatelessWidget {
                           );
                         },
                         icon: Icons.close,
-                        color: Colors.red.shade400,
+                        color: AppColors.error,
                         size: 65,
                       ),
 
@@ -233,7 +254,7 @@ class EventsSwipeScreen extends StatelessWidget {
                           // Could show more details or info modal
                         },
                         icon: Icons.info_outline,
-                        color: Colors.blue.shade400,
+                        color: AppColors.primaryBlue,
                         size: 50,
                       ),
 
@@ -245,7 +266,7 @@ class EventsSwipeScreen extends StatelessWidget {
                           );
                         },
                         icon: Icons.favorite,
-                        color: Colors.green.shade400,
+                        color: AppColors.primaryMagenta,
                         size: 65,
                       ),
                     ],
