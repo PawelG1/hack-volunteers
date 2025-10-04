@@ -14,6 +14,13 @@ import 'features/events/domain/usecases/clear_all_interested_events.dart';
 import 'features/events/presentation/bloc/events_bloc.dart';
 import 'features/local_storage/data/datasources/isar_data_source.dart';
 import 'features/local_storage/data/datasources/isar_data_source_impl.dart';
+import 'features/organizations/domain/repositories/organization_repository.dart';
+import 'features/organizations/data/repositories/organization_repository_impl.dart';
+import 'features/organizations/domain/usecases/create_event.dart';
+import 'features/organizations/domain/usecases/update_event.dart';
+import 'features/organizations/domain/usecases/delete_event.dart';
+import 'features/organizations/domain/usecases/get_organization_events.dart';
+import 'features/organizations/presentation/bloc/organization_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -58,6 +65,28 @@ Future<void> init() async {
   // Using Isar implementation for persistent local storage
   sl.registerLazySingleton<EventsLocalDataSource>(
     () => EventsLocalDataSourceIsarImpl(sl()),
+  );
+
+  //! Features - Organizations
+  // Bloc
+  sl.registerFactory(
+    () => OrganizationBloc(
+      createEvent: sl(),
+      updateEvent: sl(),
+      deleteEvent: sl(),
+      getOrganizationEvents: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => CreateEvent(sl()));
+  sl.registerLazySingleton(() => UpdateEvent(sl()));
+  sl.registerLazySingleton(() => DeleteEvent(sl()));
+  sl.registerLazySingleton(() => GetOrganizationEvents(sl()));
+
+  // Repository
+  sl.registerLazySingleton<OrganizationRepository>(
+    () => OrganizationRepositoryImpl(localDataSource: sl()),
   );
 
   //! Core

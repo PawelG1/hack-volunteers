@@ -1,4 +1,6 @@
+import 'package:isar/isar.dart';
 import '../models/volunteer_event_model.dart';
+import '../../../local_storage/data/models/volunteer_event_isar_model.dart';
 
 /// Abstract interface for local data source
 /// Following Interface Segregation Principle
@@ -23,51 +25,122 @@ abstract class EventsLocalDataSource {
 
   /// Clear all interested events
   Future<void> clearAllInterests();
+
+  /// Save single event (for creating/updating)
+  Future<void> saveEvent(VolunteerEventModel event);
+
+  /// Delete event by ID
+  Future<void> deleteEvent(String eventId);
+
+  /// Get all events (alias for getCachedEvents for organization repo)
+  Future<List<VolunteerEventModel>> getAllEvents();
 }
 
-/// Mock implementation for now - will be replaced with Isar later
+/// Isar implementation for events local data source
 class EventsLocalDataSourceImpl implements EventsLocalDataSource {
-  // In-memory storage for now
-  List<VolunteerEventModel> _cachedEvents = [];
-  final List<String> _interestedEventIds = [];
-  final List<String> _skippedEventIds = [];
+  final Isar isar;
+
+  EventsLocalDataSourceImpl({required this.isar});
 
   @override
   Future<List<VolunteerEventModel>> getCachedEvents() async {
-    return _cachedEvents;
+    final isarEvents = await isar.volunteerEventIsarModels.where().findAll();
+    return isarEvents.map((e) => e.toModel()).toList();
   }
 
   @override
   Future<void> cacheEvents(List<VolunteerEventModel> events) async {
-    _cachedEvents = events;
+    await isar.writeTxn(() async {
+      // Clear old events and add new ones
+      await isar.volunteerEventIsarModels.clear();
+      for (final event in events) {
+        final isarModel = VolunteerEventIsarModel.fromModel(event);
+        await isar.volunteerEventIsarModels.put(isarModel);
+      }
+    });
   }
 
   @override
   Future<void> saveInterestedEvent(String eventId) async {
-    if (!_interestedEventIds.contains(eventId)) {
-      _interestedEventIds.add(eventId);
-    }
+    // For now, we'll handle this in UserInterestIsarModel
+    // This is just a placeholder
+    print('💾 Saving interested event: $eventId');
   }
 
   @override
   Future<void> saveSkippedEvent(String eventId) async {
-    if (!_skippedEventIds.contains(eventId)) {
-      _skippedEventIds.add(eventId);
-    }
+    // Placeholder for skipped events
+    print('💾 Saving skipped event: $eventId');
   }
 
   @override
   Future<List<String>> getInterestedEventIds() async {
-    return _interestedEventIds;
+    // Placeholder - should query UserInterestIsarModel
+    return [];
   }
 
   @override
   Future<void> removeInterestedEvent(String eventId) async {
-    _interestedEventIds.remove(eventId);
+    // Placeholder
+    print('💾 Removing interested event: $eventId');
   }
 
   @override
   Future<void> clearAllInterests() async {
-    _interestedEventIds.clear();
+    // Placeholder
+    print('💾 Clearing all interests');
+  }
+
+  @override
+  Future<void> saveEvent(VolunteerEventModel event) async {
+    print('💾 ISAR: Saving event to database: ${event.id} - ${event.title}');
+    await isar.writeTxn(() async {
+      // Check if event exists
+      final existingEvent = await isar.volunteerEventIsarModels
+          .filter()
+          .eventIdEqualTo(event.id)
+          .findFirst();
+      
+      if (existingEvent != null) {
+        print('💾 ISAR: Updating existing event ${event.id}');
+        // Update existing event
+        final updatedModel = VolunteerEventIsarModel.fromModel(event);
+        updatedModel.id = existingEvent.id; // Keep the same Isar ID
+        await isar.volunteerEventIsarModels.put(updatedModel);
+      } else {
+        print('💾 ISAR: Creating new event ${event.id}');
+        // Create new event
+        final newModel = VolunteerEventIsarModel.fromModel(event);
+        await isar.volunteerEventIsarModels.put(newModel);
+      }
+    });
+    print('💾 ISAR: Event saved successfully!');
+    
+    // Verify save
+    final allEvents = await getAllEvents();
+    print('💾 ISAR: Total events in database: ${allEvents.length}');
+    for (final e in allEvents) {
+      print('   - ${e.id}: ${e.title}');
+    }
+  }
+
+  @override
+  Future<void> deleteEvent(String eventId) async {
+    await isar.writeTxn(() async {
+      final eventToDelete = await isar.volunteerEventIsarModels
+          .filter()
+          .eventIdEqualTo(eventId)
+          .findFirst();
+      
+      if (eventToDelete != null) {
+        await isar.volunteerEventIsarModels.delete(eventToDelete.id);
+        print('💾 ISAR: Deleted event $eventId');
+      }
+    });
+  }
+
+  @override
+  Future<List<VolunteerEventModel>> getAllEvents() async {
+    return getCachedEvents();
   }
 }

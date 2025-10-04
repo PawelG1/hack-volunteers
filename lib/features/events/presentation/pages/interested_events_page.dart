@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/image_display_widget.dart';
 import '../../domain/entities/volunteer_event.dart';
 import '../../domain/repositories/events_repository.dart';
 import '../../domain/usecases/remove_interested_event.dart';
@@ -205,49 +206,43 @@ class _InterestedEventsPageState extends State<InterestedEventsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image or gradient header
-            Container(
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                gradient: event.imageUrl == null
-                    ? AppColors.primaryGradient
-                    : null,
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
-              child: event.imageUrl != null
-                  ? ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
-                      child: Image.network(
-                        event.imageUrl!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Container(
-                          decoration: BoxDecoration(
-                            gradient: AppColors.primaryGradient,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.volunteer_activism,
-                              size: 50,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : const Center(
+              child: SizedBox(
+                height: 150,
+                width: double.infinity,
+                child: ImageDisplayWidget(
+                  imagePath: event.imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: Container(
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                    ),
+                    child: const Center(
                       child: Icon(
                         Icons.volunteer_activism,
                         size: 50,
                         color: Colors.white70,
                       ),
                     ),
+                  ),
+                  errorWidget: Container(
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.volunteer_activism,
+                        size: 50,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
 
             // Content

@@ -8,6 +8,7 @@ abstract class IsarDataSource {
 
   /// Events operations
   Future<void> saveEvents(List<VolunteerEventIsarModel> events);
+  Future<void> saveEvent(VolunteerEventIsarModel event);
   Future<List<VolunteerEventIsarModel>> getEvents();
   Future<VolunteerEventIsarModel?> getEventById(String eventId);
   Future<void> deleteEvent(String eventId);

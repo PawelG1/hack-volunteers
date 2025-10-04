@@ -22,15 +22,32 @@ class EventsRepositoryImpl implements EventsRepository {
   @override
   Future<Either<Failure, List<VolunteerEvent>>> getEvents() async {
     try {
-      // Try to get from remote
+      print('📱 VOLUNTEER REPO: Getting events...');
+      
+      // First, try to get from local cache (Isar)
+      final cachedEvents = await localDataSource.getCachedEvents();
+      print('📱 VOLUNTEER REPO: Found ${cachedEvents.length} events in Isar');
+      
+      if (cachedEvents.isNotEmpty) {
+        // Return cached events if available
+        for (final event in cachedEvents) {
+          print('   - ${event.title} (id: ${event.id})');
+        }
+        return Right(cachedEvents);
+      }
+      
+      // If no cached events, try remote (for first-time users)
+      print('📱 VOLUNTEER REPO: No cached events, fetching from remote...');
       final remoteEvents = await remoteDataSource.getEvents();
-
-      // Cache the events
+      
+      // Cache the remote events
       await localDataSource.cacheEvents(remoteEvents);
-
+      print('📱 VOLUNTEER REPO: Cached ${remoteEvents.length} remote events');
+      
       return Right(remoteEvents);
     } catch (e) {
-      // If remote fails, try to get from cache
+      print('📱 VOLUNTEER REPO: Error getting events: $e');
+      // If everything fails, try cache as last resort
       try {
         final cachedEvents = await localDataSource.getCachedEvents();
         if (cachedEvents.isEmpty) {

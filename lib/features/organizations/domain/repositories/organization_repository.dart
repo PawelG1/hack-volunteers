@@ -9,6 +9,9 @@ abstract class OrganizationRepository {
   /// Publish a new event
   Future<Either<Failure, VolunteerEvent>> publishEvent(VolunteerEvent event);
 
+  /// Create a new event (alias for publishEvent)
+  Future<Either<Failure, VolunteerEvent>> createEvent(VolunteerEvent event);
+
   /// Update an existing event
   Future<Either<Failure, VolunteerEvent>> updateEvent(VolunteerEvent event);
 

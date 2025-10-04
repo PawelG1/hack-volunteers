@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/image_display_widget.dart';
 import '../../domain/entities/volunteer_event.dart';
 import 'package:intl/intl.dart';
 
@@ -234,23 +235,46 @@ class _EventCardState extends State<EventCard> {
   }
 
   Widget _buildBackgroundImage() {
-    // For now using gradient placeholder - in future use widget.event.imageUrl
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            _getCategoryColor(widget.event.categories.firstOrNull),
-            _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
-          ],
+    // Use ImageDisplayWidget to handle both local files and network URLs
+    return ImageDisplayWidget(
+      imagePath: widget.event.imageUrl,
+      fit: BoxFit.cover,
+      placeholder: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _getCategoryColor(widget.event.categories.firstOrNull),
+              _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Icon(
+            _getCategoryIcon(widget.event.categories.firstOrNull),
+            size: 120,
+            color: Colors.white.withValues(alpha: 0.3),
+          ),
         ),
       ),
-      child: Center(
-        child: Icon(
-          _getCategoryIcon(widget.event.categories.firstOrNull),
-          size: 120,
-          color: Colors.white.withValues(alpha: 0.3),
+      errorWidget: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _getCategoryColor(widget.event.categories.firstOrNull),
+              _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Icon(
+            _getCategoryIcon(widget.event.categories.firstOrNull),
+            size: 120,
+            color: Colors.white.withValues(alpha: 0.3),
+          ),
         ),
       ),
     );

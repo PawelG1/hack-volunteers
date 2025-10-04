@@ -67,6 +67,13 @@ class IsarDataSourceImpl implements IsarDataSource {
     });
   }
 
+  @override
+  Future<void> saveEvent(VolunteerEventIsarModel event) async {
+    await isar.writeTxn(() async {
+      await isar.volunteerEventIsarModels.put(event);
+    });
+  }
+
   // ==================== USER INTERESTS ====================
 
   @override

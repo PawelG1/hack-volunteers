@@ -14,28 +14,13 @@ class EventsLocalDataSourceIsarImpl implements EventsLocalDataSource {
   Future<List<VolunteerEventModel>> getCachedEvents() async {
     final isarEvents = await isarDataSource.getEvents();
 
-    return isarEvents.map((isarEvent) {
-      final domainMap = isarEvent.toDomain();
-      return VolunteerEventModel.fromJson(domainMap);
-    }).toList();
+    return isarEvents.map((isarEvent) => isarEvent.toModel()).toList();
   }
 
   @override
   Future<void> cacheEvents(List<VolunteerEventModel> events) async {
     final isarEvents = events
-        .map(
-          (event) => VolunteerEventIsarModel.create(
-            eventId: event.id,
-            title: event.title,
-            description: event.description,
-            organization: event.organization,
-            location: event.location,
-            date: event.date,
-            requiredVolunteers: event.requiredVolunteers,
-            categories: event.categories,
-            imageUrl: event.imageUrl,
-          ),
-        )
+        .map((event) => VolunteerEventIsarModel.fromModel(event))
         .toList();
 
     await isarDataSource.saveEvents(isarEvents);
@@ -85,5 +70,23 @@ class EventsLocalDataSourceIsarImpl implements EventsLocalDataSource {
   Future<void> clearAll() async {
     await isarDataSource.clearEvents();
     await isarDataSource.clearInterests();
+  }
+
+  @override
+  Future<void> saveEvent(VolunteerEventModel event) async {
+    print('💾 ISAR_IMPL: Saving event ${event.id} - ${event.title}');
+    final isarEvent = VolunteerEventIsarModel.fromModel(event);
+    await isarDataSource.saveEvent(isarEvent);
+    print('💾 ISAR_IMPL: Event saved successfully');
+  }
+
+  @override
+  Future<void> deleteEvent(String eventId) async {
+    await isarDataSource.deleteEvent(eventId);
+  }
+
+  @override
+  Future<List<VolunteerEventModel>> getAllEvents() async {
+    return getCachedEvents(); // Alias to getCachedEvents
   }
 }

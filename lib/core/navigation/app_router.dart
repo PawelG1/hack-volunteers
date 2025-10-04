@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/domain/entities/user.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -7,7 +8,9 @@ import '../../features/volunteers/presentation/pages/volunteer_dashboard.dart';
 import '../../features/organizations/presentation/pages/organization_dashboard.dart';
 import '../../features/organizations/presentation/pages/manage_events_page.dart';
 import '../../features/organizations/presentation/pages/applications_page.dart';
+import '../../features/organizations/presentation/bloc/organization_bloc.dart';
 import '../../features/coordinators/presentation/pages/coordinator_dashboard.dart';
+import '../../injection_container.dart' as di;
 
 // Export UserRole so other files can use it
 export '../../features/auth/domain/entities/user.dart' show UserRole;
@@ -72,12 +75,18 @@ class AppRouter {
       GoRoute(
         path: '/organization',
         name: 'organization',
-        builder: (context, state) => const OrganizationDashboard(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => di.sl<OrganizationBloc>(),
+          child: const OrganizationDashboard(),
+        ),
         routes: [
           GoRoute(
             path: 'events',
             name: 'organization-events',
-            builder: (context, state) => const ManageEventsPage(),
+            builder: (context, state) => BlocProvider(
+              create: (context) => di.sl<OrganizationBloc>(),
+              child: const ManageEventsPage(),
+            ),
           ),
           GoRoute(
             path: 'applications',

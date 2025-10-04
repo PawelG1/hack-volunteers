@@ -5,9 +5,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/navigation/app_router.dart';
 import '../../../events/presentation/bloc/events_bloc.dart';
 import '../../../events/presentation/pages/events_swipe_screen.dart';
+import '../../../events/presentation/pages/interested_events_page.dart';
+import '../../../events/domain/repositories/events_repository.dart';
 import '../../../search/presentation/pages/search_events_page.dart';
 import '../../../map/presentation/pages/map_events_page.dart';
-import '../../../calendar/presentation/pages/calendar_events_page.dart';
 import '../../../../injection_container.dart' as di;
 
 /// Volunteer Dashboard with bottom navigation
@@ -20,6 +21,20 @@ class VolunteerDashboard extends StatefulWidget {
 
 class _VolunteerDashboardState extends State<VolunteerDashboard> {
   int _selectedIndex = 0;
+
+  Future<int> _getInterestedEventsCount() async {
+    try {
+      final repository = di.sl<EventsRepository>();
+      final result = await repository.getInterestedEvents();
+      return result.fold(
+        (failure) => 0,
+        (events) => events.length,
+      );
+    } catch (e) {
+      print('❌ Error getting interested events count: $e');
+      return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +56,11 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             label: 'Odkrywaj',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Moje',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.search_outlined),
             activeIcon: Icon(Icons.search),
             label: 'Szukaj',
@@ -49,11 +69,6 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             icon: Icon(Icons.map_outlined),
             activeIcon: Icon(Icons.map),
             label: 'Mapa',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            activeIcon: Icon(Icons.calendar_today),
-            label: 'Kalendarz',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
@@ -73,11 +88,11 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
           child: const EventsSwipeScreen(),
         );
       case 1:
-        return _buildSearchTab();
+        return _buildMyEventsTab();
       case 2:
-        return _buildMapTab();
+        return _buildSearchTab();
       case 3:
-        return _buildCalendarTab();
+        return _buildMapTab();
       case 4:
         return _buildProfileTab();
       default:
@@ -88,16 +103,16 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     }
   }
 
+  Widget _buildMyEventsTab() {
+    return const InterestedEventsPage();
+  }
+
   Widget _buildSearchTab() {
     return const SearchEventsPage();
   }
 
   Widget _buildMapTab() {
     return const MapEventsPage();
-  }
-
-  Widget _buildCalendarTab() {
-    return const CalendarEventsPage();
   }
 
   Widget _buildProfileTab() {
@@ -198,11 +213,17 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildStatCard(
-                    icon: Icons.event_available,
-                    label: 'Wydarzenia',
-                    value: '0',
-                    color: AppColors.primaryGreen,
+                  child: FutureBuilder<int>(
+                    future: _getInterestedEventsCount(),
+                    builder: (context, snapshot) {
+                      final count = snapshot.data?.toString() ?? '0';
+                      return _buildStatCard(
+                        icon: Icons.event_available,
+                        label: 'Wydarzenia',
+                        value: count,
+                        color: AppColors.primaryGreen,
+                      );
+                    },
                   ),
                 ),
               ],

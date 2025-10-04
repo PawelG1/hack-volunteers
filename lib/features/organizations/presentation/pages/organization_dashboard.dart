@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/navigation/app_router.dart';
+import '../../../../injection_container.dart' as di;
+import '../bloc/organization_bloc.dart';
+import 'manage_events_page.dart';
 
 /// Organization Dashboard with bottom navigation
 class OrganizationDashboard extends StatefulWidget {
@@ -281,15 +285,17 @@ class _OrganizationDashboardState extends State<OrganizationDashboard> {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Funkcja dodawania wydarzeń będzie wkrótce dostępna'),
-                  backgroundColor: AppColors.primaryBlue,
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => di.sl<OrganizationBloc>(),
+                    child: const ManageEventsPage(),
+                  ),
                 ),
               );
             },
             icon: const Icon(Icons.add),
-            label: const Text('Dodaj wydarzenie'),
+            label: const Text('Zarządzaj wydarzeniami'),
           ),
         ],
       ),

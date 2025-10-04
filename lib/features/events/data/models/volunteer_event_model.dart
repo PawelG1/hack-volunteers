@@ -102,4 +102,27 @@ class VolunteerEventModel extends VolunteerEvent {
       contactPhone: entity.contactPhone,
     );
   }
+
+  /// Convert model to domain entity
+  VolunteerEvent toEntity() {
+    return VolunteerEvent(
+      id: id,
+      title: title,
+      description: description,
+      organization: organization,
+      organizationId: organizationId,
+      location: location,
+      date: date,
+      endDate: endDate,
+      requiredVolunteers: requiredVolunteers,
+      currentVolunteers: currentVolunteers,
+      categories: categories,
+      imageUrl: imageUrl,
+      status: status,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      contactEmail: contactEmail,
+      contactPhone: contactPhone,
+    );
+  }
 }
