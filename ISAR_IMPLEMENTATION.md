@@ -1,5 +1,23 @@
 # 🗄️ Isar - Lokalna baza danych
 
+## ✅ AKTYWNA - Isar jest włączony i działa!
+
+Isar został pomyślnie zintegrowany i jest aktywnie używany do przechowywania danych lokalnie.
+
+### 🔧 Fix dla Android Gradle Plugin 8.x
+
+Isar 3.1.0+1 wymaga małej poprawki dla kompatybilności z AGP 8.x:
+
+```bash
+# Automatyczny fix
+./scripts/fix_isar_agp.sh
+
+# Lub ręcznie po 'flutter pub get':
+# 1. Znajdź: ~/.pub-cache/hosted/pub.dev/isar_flutter_libs-3.1.0+1/
+# 2. Dodaj namespace do android/build.gradle
+# 3. Usuń package z android/src/main/AndroidManifest.xml
+```
+
 ## ✅ Co zostało zaimplementowane
 
 ### 1. **Modele Isar** (Data Layer)
