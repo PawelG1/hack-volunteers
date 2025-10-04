@@ -66,10 +66,13 @@ class VolunteerEventIsarModel {
       'description': description,
       'organization': organization,
       'location': location,
-      'date': date,
+      'date': date.toIso8601String(), // Convert DateTime to String
       'requiredVolunteers': requiredVolunteers,
+      'currentVolunteers': 0, // Default value
       'categories': categories,
       'imageUrl': imageUrl,
+      'status': 'published', // Default status
+      'createdAt': DateTime.now().toIso8601String(), // Use cached time
     };
   }
 }

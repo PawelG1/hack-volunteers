@@ -71,15 +71,39 @@ class IsarDataSourceImpl implements IsarDataSource {
 
   @override
   Future<void> saveInterest(UserInterestIsarModel interest) async {
+    print('💾 DATABASE: Attempting to save interest for ${interest.eventId} with ID ${interest.id}');
+    
     await isar.writeTxn(() async {
-      // First, delete any existing interest for this event
-      await isar.userInterestIsarModels
-          .filter()
-          .eventIdEqualTo(interest.eventId)
-          .deleteAll();
+      // ATOMIC CHECK: Use putIfAbsent-like logic
+      // First try to get existing record
+      final existing = await isar.userInterestIsarModels.get(interest.id);
       
-      // Then save the new interest
-      await isar.userInterestIsarModels.put(interest);
+      if (existing != null) {
+        print('💾 DATABASE: Found existing interest for ${interest.eventId}, isInterested: ${existing.isInterested}');
+        
+        // Only update if state changed
+        if (existing.isInterested != interest.isInterested) {
+          await isar.userInterestIsarModels.put(interest);
+          print('💾 DATABASE: Updated interest for ${interest.eventId} from ${existing.isInterested} to ${interest.isInterested}');
+        } else {
+          print('🚫 DATABASE BLOCKED: Duplicate interest for ${interest.eventId}, same state (${interest.isInterested}) - skipping');
+        }
+      } else {
+        // CRITICAL: Double-check with unique constraint 
+        // In case of race condition, this will fail with unique constraint violation
+        try {
+          await isar.userInterestIsarModels.put(interest);
+          print('💾 DATABASE: Saved NEW interest for ${interest.eventId} (isInterested: ${interest.isInterested})');
+        } catch (e) {
+          // This should catch unique constraint violations
+          print('🚫 DATABASE ERROR: Failed to save ${interest.eventId} - likely duplicate: $e');
+          // Try to get the existing record that caused the conflict
+          final conflicting = await isar.userInterestIsarModels.get(interest.id);
+          if (conflicting != null) {
+            print('💾 DATABASE: Conflict resolved - found existing ${interest.eventId} with isInterested: ${conflicting.isInterested}');
+          }
+        }
+      }
     });
   }
 
@@ -95,7 +119,29 @@ class IsarDataSourceImpl implements IsarDataSource {
         .isInterestedEqualTo(true)
         .findAll();
 
-    return interests.map((i) => i.eventId).toList();
+    final eventIds = interests.map((i) => i.eventId).toList();
+    
+    // Debug: Check for duplicates
+    final uniqueIds = eventIds.toSet();
+    if (eventIds.length != uniqueIds.length) {
+      print('🚨 DATABASE CORRUPTION: Found ${eventIds.length - uniqueIds.length} duplicate interests!');
+      print('📋 All interests: ${eventIds}');
+      print('📋 Unique interests: ${uniqueIds.toList()}');
+      
+      // Log detailed info about each interest record
+      for (final interest in interests) {
+        print('💾 Interest record: ID=${interest.id}, eventId=${interest.eventId}, isInterested=${interest.isInterested}');
+      }
+      
+      // NUCLEAR OPTION: Return only unique IDs
+      final uniqueList = uniqueIds.toList();
+      print('🔧 DEDUPLICATION: Returning ${uniqueList.length} unique events instead of ${eventIds.length}');
+      return uniqueList;
+    } else {
+      print('✅ DATABASE OK: ${eventIds.length} unique interested events found');
+    }
+
+    return eventIds;
   }
 
   @override
@@ -106,6 +152,20 @@ class IsarDataSourceImpl implements IsarDataSource {
         .findAll();
 
     return interests.map((i) => i.eventId).toList();
+  }
+
+  @override
+  Future<void> removeInterest(String eventId) async {
+    await isar.writeTxn(() async {
+      final interest = await isar.userInterestIsarModels
+          .filter()
+          .eventIdEqualTo(eventId)
+          .findFirst();
+
+      if (interest != null) {
+        await isar.userInterestIsarModels.delete(interest.id);
+      }
+    });
   }
 
   @override

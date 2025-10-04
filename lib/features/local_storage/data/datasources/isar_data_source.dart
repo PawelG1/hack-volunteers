@@ -18,6 +18,7 @@ abstract class IsarDataSource {
   Future<List<UserInterestIsarModel>> getInterests();
   Future<List<String>> getInterestedEventIds();
   Future<List<String>> getSkippedEventIds();
+  Future<void> removeInterest(String eventId);
   Future<void> clearInterests();
 
   /// Close database

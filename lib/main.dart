@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/theme/app_theme.dart';
+import 'core/navigation/app_router.dart';
 import 'features/events/presentation/bloc/events_bloc.dart';
-import 'features/events/presentation/pages/events_swipe_screen.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -19,13 +19,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Młody Kraków - Wolontariat',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: BlocProvider(
-        create: (context) => di.sl<EventsBloc>(),
-        child: const EventsSwipeScreen(),
+    return BlocProvider(
+      create: (context) => di.sl<EventsBloc>(),
+      child: MaterialApp.router(
+        title: 'Młody Kraków - Wolontariat',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        routerConfig: AppRouter.router,
       ),
     );
   }

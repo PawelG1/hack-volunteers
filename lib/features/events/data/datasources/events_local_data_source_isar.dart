@@ -66,6 +66,16 @@ class EventsLocalDataSourceIsarImpl implements EventsLocalDataSource {
     return await isarDataSource.getInterestedEventIds();
   }
 
+  @override
+  Future<void> removeInterestedEvent(String eventId) async {
+    await isarDataSource.removeInterest(eventId);
+  }
+
+  @override
+  Future<void> clearAllInterests() async {
+    await isarDataSource.clearInterests();
+  }
+
   /// Get skipped event IDs (additional method, not in interface)
   Future<List<String>> getSkippedEventIds() async {
     return await isarDataSource.getSkippedEventIds();

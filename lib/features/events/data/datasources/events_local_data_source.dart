@@ -17,6 +17,12 @@ abstract class EventsLocalDataSource {
 
   /// Get interested event IDs
   Future<List<String>> getInterestedEventIds();
+
+  /// Remove event from interested events
+  Future<void> removeInterestedEvent(String eventId);
+
+  /// Clear all interested events
+  Future<void> clearAllInterests();
 }
 
 /// Mock implementation for now - will be replaced with Isar later
@@ -53,5 +59,15 @@ class EventsLocalDataSourceImpl implements EventsLocalDataSource {
   @override
   Future<List<String>> getInterestedEventIds() async {
     return _interestedEventIds;
+  }
+
+  @override
+  Future<void> removeInterestedEvent(String eventId) async {
+    _interestedEventIds.remove(eventId);
+  }
+
+  @override
+  Future<void> clearAllInterests() async {
+    _interestedEventIds.clear();
   }
 }

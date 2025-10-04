@@ -31,6 +31,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   Offset _dragOffset = Offset.zero;
   bool _isDragging = false;
   bool _isSwipedOff = false;
+  bool _hasTriggeredCallback = false; // Prevent multiple callbacks
 
   @override
   void initState() {
@@ -79,11 +80,19 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _animateSwipe(int direction) {
+    if (_hasTriggeredCallback) {
+      print('🚫 WIDGET BLOCKED: Callback already triggered for ${widget.event.id}');
+      return; // Prevent duplicate swipes
+    }
+    
+    print('📱 WIDGET: Starting swipe animation for ${widget.event.id}');
+    
     final screenWidth = MediaQuery.of(context).size.width;
     final endOffset = Offset(screenWidth * 1.5 * direction, _dragOffset.dy);
 
     setState(() {
       _isSwipedOff = true;
+      _hasTriggeredCallback = true; // Mark as triggered
     });
 
     _animation = Tween<Offset>(
@@ -103,6 +112,9 @@ class _SwipeableCardState extends State<SwipeableCard>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward().then((_) {
+      if (!mounted) return; // Check if widget is still mounted
+      
+      print('📱 WIDGET: Calling callback for ${widget.event.id}');
       if (direction > 0) {
         widget.onSwipeRight();
       } else {

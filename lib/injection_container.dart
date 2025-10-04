@@ -5,8 +5,12 @@ import 'features/events/data/datasources/events_remote_data_source.dart';
 import 'features/events/data/repositories/events_repository_impl.dart';
 import 'features/events/domain/repositories/events_repository.dart';
 import 'features/events/domain/usecases/get_events.dart';
+import 'features/events/domain/usecases/get_interested_events.dart';
+import 'features/events/domain/usecases/apply_for_event.dart';
+import 'features/events/domain/usecases/remove_interested_event.dart';
 import 'features/events/domain/usecases/save_interested_event.dart';
 import 'features/events/domain/usecases/save_skipped_event.dart';
+import 'features/events/domain/usecases/clear_all_interested_events.dart';
 import 'features/events/presentation/bloc/events_bloc.dart';
 import 'features/local_storage/data/datasources/isar_data_source.dart';
 import 'features/local_storage/data/datasources/isar_data_source_impl.dart';
@@ -34,8 +38,12 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => GetEvents(sl()));
+  sl.registerLazySingleton(() => GetInterestedEvents(sl()));
+  sl.registerLazySingleton(() => ApplyForEvent(sl()));
+  sl.registerLazySingleton(() => RemoveInterestedEvent(sl()));
   sl.registerLazySingleton(() => SaveInterestedEvent(sl()));
   sl.registerLazySingleton(() => SaveSkippedEvent(sl()));
+  sl.registerLazySingleton(() => ClearAllInterestedEvents(sl()));
 
   // Repository
   sl.registerLazySingleton<EventsRepository>(

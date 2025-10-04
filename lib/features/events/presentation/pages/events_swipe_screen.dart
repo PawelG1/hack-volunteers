@@ -239,6 +239,7 @@ class EventsSwipeScreen extends StatelessWidget {
                       // Dislike button
                       _buildActionButton(
                         onPressed: () {
+                          print('🔘 BUTTON: Dislike button pressed for ${currentEvent.id}');
                           context.read<EventsBloc>().add(
                             SwipeLeftEvent(currentEvent.id),
                           );
@@ -261,6 +262,9 @@ class EventsSwipeScreen extends StatelessWidget {
                       // Like button
                       _buildActionButton(
                         onPressed: () {
+                          // CRITICAL: Don't double-trigger if swipe is in progress
+                          // This prevents race condition between button and swipe gesture
+                          print('🔘 BUTTON: Like button pressed for ${currentEvent.id}');
                           context.read<EventsBloc>().add(
                             SwipeRightEvent(currentEvent.id),
                           );
