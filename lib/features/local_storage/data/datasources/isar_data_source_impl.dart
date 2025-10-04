@@ -72,6 +72,13 @@ class IsarDataSourceImpl implements IsarDataSource {
   @override
   Future<void> saveInterest(UserInterestIsarModel interest) async {
     await isar.writeTxn(() async {
+      // First, delete any existing interest for this event
+      await isar.userInterestIsarModels
+          .filter()
+          .eventIdEqualTo(interest.eventId)
+          .deleteAll();
+      
+      // Then save the new interest
       await isar.userInterestIsarModels.put(interest);
     });
   }

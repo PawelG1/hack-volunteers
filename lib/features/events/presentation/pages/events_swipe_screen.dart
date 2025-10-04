@@ -12,13 +12,33 @@ class EventsSwipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('Wolontariat dla Ciebie'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.volunteer_activism,
+              color: Colors.red.shade400,
+              size: 28,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'VolunTinder',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade600,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
         elevation: 0,
+        shadowColor: Colors.black12,
       ),
       body: BlocConsumer<EventsBloc, EventsState>(
         listener: (context, state) {
@@ -117,30 +137,31 @@ class EventsSwipeScreen extends StatelessWidget {
 
             return Column(
               children: [
-                // Progress indicator
+                // Minimalist progress dots
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
                   child: Row(
-                    children: [
-                      Text(
-                        '${state.currentIndex + 1} / ${state.events.length}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: (state.currentIndex + 1) / state.events.length,
-                          backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.blue.shade600,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      state.events.length > 5 ? 5 : state.events.length,
+                      (index) {
+                        final isActive = index == state.currentIndex;
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          width: isActive ? 24 : 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: isActive 
+                                ? Colors.red.shade400 
+                                : Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                        ),
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   ),
                 ),
 
@@ -183,42 +204,49 @@ class EventsSwipeScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Action buttons
+                // Action buttons - Tinder style
                 Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.only(
+                    left: 24.0,
+                    right: 24.0,
+                    bottom: 32.0,
+                    top: 16.0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       // Dislike button
-                      FloatingActionButton(
-                        heroTag: 'dislike',
+                      _buildActionButton(
                         onPressed: () {
                           context.read<EventsBloc>().add(
                             SwipeLeftEvent(currentEvent.id),
                           );
                         },
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.close,
-                          size: 32,
-                          color: Colors.red.shade400,
-                        ),
+                        icon: Icons.close,
+                        color: Colors.red.shade400,
+                        size: 65,
+                      ),
+
+                      // Info button (middle)
+                      _buildActionButton(
+                        onPressed: () {
+                          // Could show more details or info modal
+                        },
+                        icon: Icons.info_outline,
+                        color: Colors.blue.shade400,
+                        size: 50,
                       ),
 
                       // Like button
-                      FloatingActionButton(
-                        heroTag: 'like',
+                      _buildActionButton(
                         onPressed: () {
                           context.read<EventsBloc>().add(
                             SwipeRightEvent(currentEvent.id),
                           );
                         },
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.favorite,
-                          size: 32,
-                          color: Colors.green.shade400,
-                        ),
+                        icon: Icons.favorite,
+                        color: Colors.green.shade400,
+                        size: 65,
                       ),
                     ],
                   ),
@@ -229,6 +257,42 @@ class EventsSwipeScreen extends StatelessWidget {
 
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+
+  /// Build Tinder-style action button
+  Widget _buildActionButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required Color color,
+    required double size,
+  }) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(size / 2),
+          child: Icon(
+            icon,
+            color: color,
+            size: size * 0.5,
+          ),
+        ),
       ),
     );
   }
