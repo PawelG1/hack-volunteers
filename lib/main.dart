@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => di.sl<EventsBloc>(),
       child: MaterialApp.router(
-        title: 'Młody Kraków - Wolontariat',
+        title: 'SmokPomaga',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         routerConfig: AppRouter.router,

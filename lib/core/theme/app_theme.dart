@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-/// Motyw aplikacji "Młody Kraków"
+/// Motyw aplikacji "SmokPomaga"
 class AppTheme {
   AppTheme._(); // Private constructor
 

@@ -1,5 +1,5 @@
-name: hack_volunteers
-description: "A volunteer events app with swipe mechanics."
+name: smok_pomaga
+description: "SmokPomaga - Aplikacja do znajdowania i zarządzania wydarzeniami wolontarskymi."
 publish_to: 'none'
 version: 0.1.0
 
@@ -51,5 +51,6 @@ flutter:
   
   # Assets
   assets:
+    - assets/images/logo.png
     - assets/images/mlody_krakow_vertical.png
     - assets/images/mlody_krakow_horizontal.png

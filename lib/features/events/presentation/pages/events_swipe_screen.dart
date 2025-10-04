@@ -19,9 +19,9 @@ class EventsSwipeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Logo "Młody Kraków"
+            // Logo "SmokPomaga"
             Image.asset(
-              'assets/images/mlody_krakow_horizontal.png',
+              'assets/images/logo.png',
               height: 40,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
@@ -43,7 +43,7 @@ class EventsSwipeScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      'Młody Kraków',
+                      'SmokPomaga',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

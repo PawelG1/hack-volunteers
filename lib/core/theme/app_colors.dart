@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Kolory aplikacji bazujące na logo "Młody Kraków"
+/// Kolory aplikacji "SmokPomaga" - wspierane przez "Młody Kraków"
 class AppColors {
   AppColors._(); // Private constructor to prevent instantiation
 

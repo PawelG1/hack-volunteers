@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/mlody_krakow_vertical.png',
+                      'assets/images/logo.png',
                       height: 80,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                   
                   // Title
                   const Text(
-                    'Młody Kraków',
+                    'SmokPomaga',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Wolontariat',
+                    'Pomagamy razem',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white70,
