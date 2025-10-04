@@ -1,15 +1,16 @@
 import '../models/volunteer_event_model.dart';
+import 'events_local_data_source.dart';
 import '../../../local_storage/data/datasources/isar_data_source.dart';
 import '../../../local_storage/data/models/volunteer_event_isar_model.dart';
 import '../../../local_storage/data/models/user_interest_isar_model.dart';
 
-/// Local data source using Isar
-class EventsLocalDataSourceIsarImpl {
+/// Local data source using Isar - implements EventsLocalDataSource interface
+class EventsLocalDataSourceIsarImpl implements EventsLocalDataSource {
   final IsarDataSource isarDataSource;
 
   EventsLocalDataSourceIsarImpl(this.isarDataSource);
 
-  /// Get cached events from Isar
+  @override
   Future<List<VolunteerEventModel>> getCachedEvents() async {
     final isarEvents = await isarDataSource.getEvents();
 
@@ -19,7 +20,7 @@ class EventsLocalDataSourceIsarImpl {
     }).toList();
   }
 
-  /// Cache events to Isar
+  @override
   Future<void> cacheEvents(List<VolunteerEventModel> events) async {
     final isarEvents = events
         .map(
@@ -40,7 +41,7 @@ class EventsLocalDataSourceIsarImpl {
     await isarDataSource.saveEvents(isarEvents);
   }
 
-  /// Save interested event
+  @override
   Future<void> saveInterestedEvent(String eventId) async {
     final interest = UserInterestIsarModel.create(
       eventId: eventId,
@@ -50,7 +51,7 @@ class EventsLocalDataSourceIsarImpl {
     await isarDataSource.saveInterest(interest);
   }
 
-  /// Save skipped event
+  @override
   Future<void> saveSkippedEvent(String eventId) async {
     final interest = UserInterestIsarModel.create(
       eventId: eventId,
@@ -60,17 +61,17 @@ class EventsLocalDataSourceIsarImpl {
     await isarDataSource.saveInterest(interest);
   }
 
-  /// Get interested event IDs
+  @override
   Future<List<String>> getInterestedEventIds() async {
     return await isarDataSource.getInterestedEventIds();
   }
 
-  /// Get skipped event IDs
+  /// Get skipped event IDs (additional method, not in interface)
   Future<List<String>> getSkippedEventIds() async {
     return await isarDataSource.getSkippedEventIds();
   }
 
-  /// Clear all cached data
+  /// Clear all cached data (additional method, not in interface)
   Future<void> clearAll() async {
     await isarDataSource.clearEvents();
     await isarDataSource.clearInterests();
