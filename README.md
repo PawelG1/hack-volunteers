@@ -1,136 +1,157 @@
 # 🤝 Hack Volunteers
 
-Aplikacja mobilna do wybierania wydarzeń wolontariackich z mechaniką swipe'owania w stylu Tinder.
+> Flutter mobile application for discovering volunteer opportunities through Tinder-style swipe mechanics
 
-## ⚡ SZYBKI START
+[![Flutter](https://img.shields.io/badge/Flutter-3.9%2B-02569B?logo=flutter)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.9%2B-0175C2?logo=dart)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-Educational-green.svg)](LICENSE)
+
+## 📋 About
+
+Hack Volunteers is a mobile application designed to connect youth with volunteer opportunities in Kraków. Users can browse through volunteer events and express interest through intuitive swipe gestures:
+
+- 👉 **Swipe right** → Interested
+- 👈 **Swipe left** → Skip
+
+The application aims to make volunteering more accessible and engaging for young people while helping organizations find enthusiastic volunteers.
+
+## ✨ Features
+
+### Current (v0.1.0)
+- ✅ Tinder-style swipe mechanics for browsing events
+- ✅ Detailed event information cards
+- ✅ Interest tracking system
+- ✅ Smooth animations and transitions
+- ✅ Responsive UI design
+- ✅ Local data persistence (in-memory)
+
+### Planned
+- � Isar local database integration
+- 🔄 Firebase Authentication
+- � Cloud Firestore integration
+- � User profile management
+- 📋 Event filtering and search
+- 📋 Personal calendar integration
+- 📋 Push notifications
+- 📋 Volunteer certificates
+- 📋 Organization portal
+- 📋 School coordinator dashboard
+
+## 🏗️ Architecture
+
+This project follows **Clean Architecture** principles with strict separation of concerns:
+
+```
+lib/
+├── core/                    # Shared utilities
+│   ├── error/              # Error handling
+│   ├── network/            # Network utilities
+│   └── usecases/           # Base use case
+├── features/
+│   ├── events/
+│   │   ├── domain/         # Business logic (entities, repositories, use cases)
+│   │   ├── data/           # Data layer (models, datasources, repository impl)
+│   │   └── presentation/   # UI layer (BLoC, widgets, pages)
+│   └── local_storage/      # Isar database integration
+└── injection_container.dart # Dependency injection setup
+```
+
+### Design Patterns
+
+- **Clean Architecture**: Domain, Data, and Presentation layers
+- **SOLID Principles**: Single responsibility, dependency inversion, etc.
+- **BLoC Pattern**: State management with events and states
+- **Repository Pattern**: Abstract data sources
+- **Dependency Injection**: Using GetIt service locator
+
+## 🛠️ Tech Stack
+
+| Category | Technology | Version |
+|----------|-----------|---------|
+| **Framework** | Flutter | 3.9+ |
+| **Language** | Dart | 3.9+ |
+| **State Management** | flutter_bloc | 8.1.6 |
+| **Dependency Injection** | get_it | 7.7.0 |
+| **Functional Programming** | dartz | 0.10.1 |
+| **Local Database** | isar | 3.1.0 |
+| **Value Equality** | equatable | 2.0.5 |
+| **Date Formatting** | intl | 0.19.0 |
+| **Path Provider** | path_provider | 2.1.4 |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter SDK 3.9 or higher
+- Dart SDK 3.9 or higher
+- Android Studio / VS Code with Flutter extensions
+- Android SDK or Xcode (for iOS)
+
+### Installation
 
 ```bash
-# 1. Pobierz zależności
+# Clone the repository
+git clone https://github.com/PawelG1/hack-volunteers.git
+cd hack-volunteers
+
+# Install dependencies
 flutter pub get
 
-# 2. Uruchom aplikację (tryb DEBUG - szybki!)
+# Run the app
+flutter run
+```
+
+### Build
+
+```bash
+# Debug build (development)
 flutter run
 
-# 3. Po uruchomieniu - edytuj kod i naciśnij 'r' dla Hot Reload!
+# Release build (production)
+flutter build apk --release          # Android
+flutter build ios --release          # iOS
 ```
 
-📖 **Więcej szczegółów**: [QUICK_START.md](QUICK_START.md)
+## 📖 Documentation
 
-## 🎯 O projekcie
+For detailed documentation, see:
 
-Hack Volunteers to aplikacja pomagająca znaleźć idealne wydarzenia wolontariackie. Wystarczy swipe'ować:
-- 👉 **W prawo** = Interesuję się!
-- 👈 **W lewo** = Pomiń
+- [**QUICK_START.md**](QUICK_START.md) - Quick start guide
+- [**PROJECT_ARCHITECTURE.md**](PROJECT_ARCHITECTURE.md) - Architecture details
+- [**PROJECT_VISION.md**](PROJECT_VISION.md) - Complete project vision
+- [**ISAR_IMPLEMENTATION.md**](ISAR_IMPLEMENTATION.md) - Database implementation
+- [**OPTIMIZATION.md**](OPTIMIZATION.md) - Performance optimization
+- [**COMMANDS.md**](COMMANDS.md) - Useful commands reference
 
-## 🏗️ Architektura
-
-Projekt zbudowany zgodnie z:
-- ✅ **Clean Architecture** (Domain, Data, Presentation)
-- ✅ **SOLID Principles**
-- ✅ **BLoC Pattern** dla zarządzania stanem
-- ✅ **Dependency Injection** (GetIt)
-
-📖 **Szczegółowa dokumentacja**: [PROJECT_ARCHITECTURE.md](PROJECT_ARCHITECTURE.md)
-
-## 📚 Dokumentacja
-
-- 🚀 [**QUICK_START.md**](QUICK_START.md) - Jak najszybciej zacząć
-- 🏗️ [**PROJECT_ARCHITECTURE.md**](PROJECT_ARCHITECTURE.md) - Architektura i struktura
-- ⚡ [**OPTIMIZATION.md**](OPTIMIZATION.md) - Optymalizacja czasu budowania
-- 💻 [**COMMANDS.md**](COMMANDS.md) - Wszystkie przydatne komendy
-
-## 🚀 Funkcjonalności
-
-### ✅ Zrealizowane (v0.1.0)
-
-- [x] Mechanika swipe'owania wydarzeń
-- [x] Wyświetlanie szczegółów wydarzenia
-- [x] Zapisywanie zainteresowań (in-memory)
-- [x] Clean Architecture z SOLID
-- [x] BLoC pattern dla stanu
-- [x] Responsywny design
-- [x] Mock data (5 wydarzeń)
-
-### 🔜 Planowane
-
-- [ ] Integracja z Isar (lokalna baza danych)
-- [ ] Firebase Authentication
-- [ ] Cloud Firestore (zdalne wydarzenia)
-- [ ] Lista moich zainteresowań
-- [ ] Filtrowanie wydarzeń
-- [ ] Powiadomienia
-- [ ] Profil użytkownika
-
-## 🛠️ Technologie
-
-- **Flutter** 3.9+ - Framework UI
-- **Dart** 3.9+ - Język programowania
-- **flutter_bloc** - Zarządzanie stanem
-- **get_it** - Dependency Injection
-- **dartz** - Functional programming (Either)
-- **equatable** - Porównywanie obiektów
-- **intl** - Formatowanie dat
-
-## 💡 Development Tips
-
-### Hot Reload - Twój najlepszy przyjaciel! 🔥
+## 🧪 Testing
 
 ```bash
-# Uruchom aplikację raz
-flutter run
-
-# Potem przez cały dzień:
-# 1. Edytuj kod
-# 2. Zapisz (Ctrl+S)
-# 3. Naciśnij 'r' w terminalu
-# 4. Zmiany widoczne w 1-3 sekundy!
-```
-
-### Custom Scripts
-
-```bash
-./dev.sh      # Menu szybkiego startu
-./clean.sh    # Czyszczenie cache
-```
-
-### ⚠️ WAŻNE: Nigdy nie używaj `--release` podczas developmentu!
-
-```bash
-❌ flutter run --release  # Buduje się 5-10 minut!
-✅ flutter run            # Buduje się 2-4 minuty (pierwszym razem)
-✅ Hot Reload (r)         # 1-3 sekundy! ⚡
-```
-
-## 🧪 Testowanie
-
-```bash
-# Analiza kodu
+# Run static analysis
 flutter analyze
 
-# Formatowanie
+# Format code
 dart format .
 
-# Testy (gdy będą dodane)
+# Run tests (when available)
 flutter test
 ```
 
-## 🐛 Znane problemy i rozwiązania
+## � Screenshots
 
-### Problem: "Aplikacja buduje się długo"
-**Rozwiązanie**: 
-1. Użyj `flutter run` (nie `--release`)
-2. Po pierwszym buildzie używaj Hot Reload (`r`)
-3. Zobacz pełny guide: [OPTIMIZATION.md](OPTIMIZATION.md)
+*Coming soon*
 
-### Problem: "Out of memory"
-**Rozwiązanie**: 
-1. Wyczyść cache: `./clean.sh`
-2. Restartuj IDE
+## 🤝 Contributing
 
-## 📄 Licencja
+This is an educational project. Contributions, issues, and feature requests are welcome!
 
-Projekt edukacyjny - Hack Volunteers
+## 📄 License
+
+Educational project - Hack Volunteers
+
+## 👥 Authors
+
+**PawelG1** - [GitHub Profile](https://github.com/PawelG1)
 
 ---
 
-**Made with ❤️ for volunteers**
+**Made with ❤️ for volunteers in Kraków**
