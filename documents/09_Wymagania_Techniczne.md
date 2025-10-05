@@ -419,5 +419,127 @@ Wszystkie wykorzystane biblioteki mają licencje kompatybilne z dystrybucją:
 
 ---
 
+## 9.19. ⚠️ WYŁĄCZENIE ODPOWIEDZIALNOŚCI I GWARANCJI
+
+### 9.19.1. Disclaimer techniczny
+
+**APLIKACJA I DOKUMENTACJA SĄ DOSTARCZANE "TAK JAK JEST" (AS IS)**
+
+Autorzy, programiści i właściciele **NIE GWARANTUJĄ**:
+
+**Wydajność:**
+- ❌ Działania bez błędów lub przerw
+- ❌ Osiągnięcia określonych wyników wydajnościowych
+- ❌ Kompatybilności ze wszystkimi urządzeniami Android
+- ❌ Poprawnego działania na wszystkich wersjach systemu
+
+**Bezpieczeństwo:**
+- ❌ Całkowitej ochrony danych użytkowników
+- ❌ Braku luk bezpieczeństwa
+- ❌ Odporności na ataki hakerskie
+- ❌ Zgodności z RODO w każdej konfiguracji
+
+**Niezawodność:**
+- ❌ Dostępności 24/7
+- ❌ Zachowania danych w przypadku awarii
+- ❌ Poprawności map (zależne od OpenStreetMap)
+- ❌ Działania offline we wszystkich funkcjach
+
+**Dokładność:**
+- ❌ Precyzji liczenia godzin wolontariatu
+- ❌ Poprawności generowanych certyfikatów
+- ❌ Dokładności geolokalizacji
+- ❌ Kompletności informacji o wydarzeniach
+
+### 9.19.2. Ograniczenie odpowiedzialności
+
+**AUTORZY I WŁAŚCICIELE NIE PONOSZĄ ODPOWIEDZIALNOŚCI ZA:**
+
+1. **Szkody bezpośrednie:**
+   - Utratę danych z bazy Isar
+   - Nieprawidłowe działanie aplikacji
+   - Błędy w certyfikatach lub raportach
+   - Awarie spowodowane aktualizacjami Android
+
+2. **Szkody pośrednie:**
+   - Utracone zyski lub oszczędności
+   - Przerwę w działalności organizacji
+   - Szkody reputacyjne
+   - Koszty zastępczych rozwiązań
+
+3. **Problemy zewnętrzne:**
+   - Niedostępność OpenStreetMap
+   - Zmiany w API Google Play
+   - Problemy z połączeniem internetowym użytkownika
+   - Niezgodność z przyszłymi wersjami Android
+
+4. **Decyzje użytkowników:**
+   - Nieprawidłową konfigurację systemu
+   - Użycie niezgodne z dokumentacją
+   - Brak regularnych backupów danych
+   - Instalację na niewspieranych urządzeniach
+
+### 9.19.3. Wymagania od użytkownika
+
+**UŻYTKOWNIK JEST ZOBOWIĄZANY DO:**
+
+✅ **Przed wdrożeniem:**
+- Przeprowadzenia własnych testów w środowisku docelowym
+- Weryfikacji zgodności z lokalnymi przepisami (RODO, prawo pracy)
+- Konsultacji z prawnikiem w zakresie odpowiedzialności
+- Przygotowania planu backupów i disaster recovery
+
+✅ **Podczas eksploatacji:**
+- Regularnego tworzenia kopii zapasowych bazy Isar
+- Monitorowania działania aplikacji
+- Stosowania się do best practices bezpieczeństwa
+- Szkolenia użytkowników końcowych
+
+✅ **W zakresie prawnym:**
+- Samodzielnej oceny ryzyka prawnego
+- Zapewnienia zgodności z RODO (jeśli wymagane)
+- Uzyskania zgód użytkowników na przetwarzanie danych
+- Prowadzenia dokumentacji przetwarzania danych osobowych
+
+### 9.19.4. Środki ostrożności
+
+**ZALECAMY:**
+
+⚠️ **Nie używać aplikacji jako jedynego źródła danych** o wolontariatach  
+⚠️ **Nie polegać wyłącznie na certyfikatach** generowanych przez aplikację  
+⚠️ **Nie przechowywać krytycznych danych** tylko lokalnie (brak cloud backup)  
+⚠️ **Nie zakładać 100% dostępności** mapy (zależność od OSM)  
+⚠️ **Testować aktualizacje** przed wdrożeniem produkcyjnym  
+⚠️ **Mieć plan B** na wypadek awarii aplikacji
+
+### 9.19.5. Brak wsparcia technicznego
+
+**BRAK GWARANCJI WSPARCIA:**
+
+❌ Autorzy nie są zobowiązani do:
+- Naprawiania zgłoszonych błędów
+- Udzielania pomocy technicznej
+- Wydawania aktualizacji
+- Dostosowywania do nowych wersji Android
+- Odpowiadania na pytania użytkowników
+- Szkoleń lub konsultacji
+
+✅ Wszelkie poprawki i aktualizacje są wydawane **DOBROWOLNIE** i **BEZ GWARANCJI TERMINÓW**.
+
+### 9.19.6. Zgoda użytkownika
+
+**INSTALUJĄC LUB UŻYWAJĄC APLIKACJI, UŻYTKOWNIK:**
+
+1. ✅ Potwierdza, że przeczytał niniejszy dokument
+2. ✅ Akceptuje wszystkie wyłączenia odpowiedzialności
+3. ✅ Przyjmuje na siebie całkowite ryzyko użytkowania
+4. ✅ Zrzeka się roszczeń wobec autorów i właścicieli
+5. ✅ Zobowiązuje się do samodzielnej weryfikacji zgodności prawnej
+
+**W przypadku braku akceptacji powyższych warunków, użytkownik NIE POWINIEN instalować ani używać aplikacji.**
+
+---
+
 **Ostatnia aktualizacja:** 5 października 2025  
-**Autor:** Zespół deweloperski SmokPomaga
+**Autor:** Zespół deweloperski SmokPomaga  
+**Status prawny:** Wyłączenie odpowiedzialności w maksymalnym zakresie dozwolonym przez prawo

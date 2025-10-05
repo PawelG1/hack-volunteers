@@ -64,4 +64,86 @@ Urząd Miasta Krakowa
 
 ---
 
+## ⚠️ WYŁĄCZENIE ODPOWIEDZIALNOŚCI
+
+**WAŻNE INFORMACJE PRAWNE:**
+
+Niniejsza aplikacja oraz dokumentacja są udostępniane **"TAK JAK JEST" (AS IS)** bez jakichkolwiek gwarancji.
+
+### Wyłączenie gwarancji
+
+Autorzy, programiści, kontrybutorzy oraz właściciele (program Młody Kraków, Urząd Miasta Krakowa) **NIE UDZIELAJĄ ŻADNYCH GWARANCJI**, wyraźnych ani domniemanych, w tym między innymi:
+- Gwarancji przydatności handlowej
+- Gwarancji przydatności do określonego celu
+- Gwarancji nienaruszania praw osób trzecich
+- Gwarancji poprawności, dokładności lub kompletności
+- Gwarancji bezpieczeństwa lub braku błędów
+
+### Ograniczenie odpowiedzialności
+
+W **MAKSYMALNYM ZAKRESIE DOZWOLONYM PRZEZ PRAWO**, autorzy i właściciele **NIE PONOSZĄ ODPOWIEDZIALNOŚCI** za:
+
+**Szkody materialne:**
+- Utratę danych osobowych lub służbowych
+- Przerwę w działalności gospodarczej
+- Utratę zysków lub przychodów
+- Koszty zastępczych produktów lub usług
+
+**Szkody techniczne:**
+- Błędy, awarie lub nieprawidłowe działanie aplikacji
+- Problemy z kompatybilnością urządzeń
+- Utratę połączenia internetowego lub problemy z mapą
+- Wirusy, malware lub inne szkodliwe komponenty
+- Uszkodzenie urządzenia użytkownika
+
+**Szkody prawne:**
+- Naruszenie przepisów RODO lub innych regulacji
+- Problemy wynikające z nieautoryzowanego dostępu do danych
+- Nieprawidłowe zarządzanie danymi wolontariuszy
+- Błędy w certyfikatach lub dokumentach generowanych przez aplikację
+
+**Szkody biznesowe:**
+- Niepowodzenie akcji wolontariackiej
+- Konflikty między wolontariuszami a organizacjami
+- Niedokładności w liczeniu godzin wolontariatu
+- Problemy z weryfikacją certyfikatów
+
+### Ryzyko użytkownika
+
+**UŻYTKOWNIK PRZYJMUJE NA SIEBIE CAŁKOWITE RYZYKO** związane z:
+- Instalacją i użytkowaniem aplikacji
+- Jakością, wydajnością i dokładnością aplikacji
+- Wykorzystaniem danych z aplikacji do celów formalnych
+- Zgodnością z lokalnymi przepisami prawa
+
+### Ograniczenie kwotowe
+
+W maksymalnym zakresie dozwolonym przez prawo, **CAŁKOWITA ODPOWIEDZIALNOŚĆ** autorów, kontrybutorów i właścicieli jest **OGRANICZONA DO KWOTY 0 PLN** (zero złotych).
+
+### Brak profesjonalnego wsparcia
+
+Aplikacja i dokumentacja są dostarczane **BEZ ZOBOWIĄZANIA** do:
+- Wsparcia technicznego
+- Naprawy błędów
+- Aktualizacji lub rozwoju
+- Odpowiedzi na zapytania
+- Szkoleń użytkowników
+
+### Akceptacja warunków
+
+**KORZYSTAJĄC Z APLIKACJI LUB DOKUMENTACJI, UŻYTKOWNIK POTWIERDZA**, że:
+- Przeczytał i zrozumiał powyższe wyłączenia odpowiedzialności
+- Akceptuje wszystkie ryzyka związane z użytkowaniem
+- Zrzeka się prawa do roszczeń wobec autorów i właścicieli
+- Będzie samodzielnie odpowiadał za zgodność z przepisami prawa
+
+### Konsultacja prawna
+
+**ZALECAMY SKONSULTOWANIE** wykorzystania aplikacji z:
+- Prawnikiem specjalizującym się w IT/RODO
+- Inspektorem ochrony danych (IOD)
+- Audytorem bezpieczeństwa IT
+
+---
+
 *Dokumentacja jest aktualna na dzień: 5 października 2025*

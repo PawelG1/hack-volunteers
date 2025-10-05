@@ -148,6 +148,63 @@ This is an educational project. Contributions, issues, and feature requests are 
 
 Educational project - Hack Volunteers
 
+## ⚠️ DISCLAIMER / WYŁĄCZENIE ODPOWIEDZIALNOŚCI
+
+**IMPORTANT LEGAL NOTICE / WAŻNE INFORMACJE PRAWNE:**
+
+This software and documentation are provided **"AS IS"** without warranty of any kind, express or implied.
+
+Oprogramowanie i dokumentacja są dostarczane **"TAK JAK JEST"** bez jakichkolwiek gwarancji.
+
+### English
+
+**NO WARRANTY:** The authors, contributors, and owners (Młody Kraków, City of Kraków) make no warranties regarding:
+- Correctness, accuracy, or completeness of the software
+- Fitness for a particular purpose
+- Security or absence of errors
+- Data integrity or availability
+
+**NO LIABILITY:** In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software, including but not limited to:
+- Loss of data
+- Business interruption
+- Loss of profits
+- Legal compliance issues
+- Security breaches
+
+**USER RESPONSIBILITY:** By using this software, you acknowledge that:
+- You accept all risks associated with its use
+- You are responsible for compliance with applicable laws (GDPR, etc.)
+- You will independently verify critical data
+- You will maintain appropriate backups
+
+**Total liability is limited to 0 PLN / 0 EUR.**
+
+### Polski
+
+**BRAK GWARANCJI:** Autorzy, kontrybutorzy i właściciele (Młody Kraków, Urząd Miasta Krakowa) nie udzielają żadnych gwarancji dotyczących:
+- Poprawności, dokładności lub kompletności oprogramowania
+- Przydatności do określonego celu
+- Bezpieczeństwa lub braku błędów
+- Integralności lub dostępności danych
+
+**BRAK ODPOWIEDZIALNOŚCI:** Autorzy i właściciele nie ponoszą odpowiedzialności za jakiekolwiek roszczenia, szkody lub inne zobowiązania wynikające z użytkowania oprogramowania, w tym między innymi:
+- Utratę danych
+- Przerwę w działalności
+- Utratę zysków
+- Problemy z compliance prawnym
+- Naruszenia bezpieczeństwa
+
+**ODPOWIEDZIALNOŚĆ UŻYTKOWNIKA:** Korzystając z oprogramowania, potwierdzasz, że:
+- Akceptujesz wszystkie ryzyka związane z jego użyciem
+- Jesteś odpowiedzialny za zgodność z obowiązującymi przepisami (RODO, etc.)
+- Będziesz niezależnie weryfikować krytyczne dane
+- Będziesz utrzymywać odpowiednie kopie zapasowe
+
+**Całkowita odpowiedzialność ograniczona jest do 0 PLN / 0 EUR.**
+
+**For full legal terms, see:** [`documents/19_Licencje.md`](documents/19_Licencje.md)  
+**Pełne warunki prawne:** [`documents/19_Licencje.md`](documents/19_Licencje.md)
+
 ## 👥 Authors
 
 **PawelG1** - [GitHub Profile](https://github.com/PawelG1)
