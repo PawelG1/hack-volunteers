@@ -1,0 +1,11 @@
+// Override isar_flutter_libs build configuration to fix release build issues
+// This file forces isar_flutter_libs to compile against Android SDK 31+ 
+// to support android:attr/lStar attribute
+
+android {
+    compileSdkVersion 36
+    
+    defaultConfig {
+        minSdkVersion 21
+    }
+}
