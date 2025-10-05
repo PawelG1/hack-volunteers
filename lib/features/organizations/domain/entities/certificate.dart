@@ -1,14 +1,21 @@
 import 'package:equatable/equatable.dart';
 
 /// Certificate status enum
+/// 
+/// UWAGA: Zaświadczenia są generowane TYLKO przez koordynatora szkolnego,
+/// nie przez organizację!
 enum CertificateStatus {
-  pending, // Oczekujące na zatwierdzenie
-  approved, // Zatwierdzone
-  rejected, // Odrzucone
-  issued, // Wystawione (PDF wygenerowany)
+  pending, // Oczekujące na wygenerowanie przez koordynatora
+  issued, // Wystawione przez koordynatora (PDF wygenerowany)
 }
 
 /// Volunteer certificate entity
+/// 
+/// Zaświadczenie o uczestnictwie w wolontariacie.
+/// Generowane przez KOORDYNATORA SZKOLNEGO po:
+/// 1. Organizacja oznaczyła obecność (attended)
+/// 2. Koordynator zatwierdził udział (approved)
+/// 3. Koordynator generuje zaświadczenie (issued)
 class Certificate extends Equatable {
   final String id;
   final String volunteerId;
@@ -53,7 +60,6 @@ class Certificate extends Equatable {
   });
 
   bool get isPending => status == CertificateStatus.pending;
-  bool get isApproved => status == CertificateStatus.approved;
   bool get isIssued => status == CertificateStatus.issued;
 
   @override

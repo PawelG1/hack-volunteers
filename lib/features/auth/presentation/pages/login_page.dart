@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/mlody_krakow_footer.dart';
 import '../../domain/entities/user.dart';
 
 /// Login page with role selection
@@ -243,6 +244,12 @@ class _LoginPageState extends State<LoginPage> {
                                 child: const Text('Zarejestruj się'),
                               ),
                             ],
+                          ),
+                          const SizedBox(height: 32),
+                          
+                          // Footer z informacją o wsparciu
+                          const MlodyKrakowFooter(
+                            padding: EdgeInsets.zero,
                           ),
                         ],
                       ),

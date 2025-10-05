@@ -7,8 +7,13 @@ import 'package:intl/intl.dart';
 /// Tinder-style event card with large image and gradient overlay
 class EventCard extends StatefulWidget {
   final VolunteerEvent event;
+  final double? height; // Optional height, defaults to 60% of screen
 
-  const EventCard({super.key, required this.event});
+  const EventCard({
+    super.key, 
+    required this.event,
+    this.height,
+  });
 
   @override
   State<EventCard> createState() => _EventCardState();
@@ -20,8 +25,10 @@ class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final cardHeight = widget.height ?? (screenHeight * 0.6); // Use provided height or default to 60%
     
     return Container(
+      height: cardHeight,
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -236,44 +243,46 @@ class _EventCardState extends State<EventCard> {
 
   Widget _buildBackgroundImage() {
     // Use ImageDisplayWidget to handle both local files and network URLs
-    return ImageDisplayWidget(
-      imagePath: widget.event.imageUrl,
-      fit: BoxFit.cover,
-      placeholder: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _getCategoryColor(widget.event.categories.firstOrNull),
-              _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
-            ],
+    return SizedBox.expand(
+      child: ImageDisplayWidget(
+        imagePath: widget.event.imageUrl,
+        fit: BoxFit.cover,
+        placeholder: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                _getCategoryColor(widget.event.categories.firstOrNull),
+                _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
+              ],
+            ),
+          ),
+          child: Center(
+            child: Icon(
+              _getCategoryIcon(widget.event.categories.firstOrNull),
+              size: 120,
+              color: Colors.white.withValues(alpha: 0.3),
+            ),
           ),
         ),
-        child: Center(
-          child: Icon(
-            _getCategoryIcon(widget.event.categories.firstOrNull),
-            size: 120,
-            color: Colors.white.withValues(alpha: 0.3),
+        errorWidget: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                _getCategoryColor(widget.event.categories.firstOrNull),
+                _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
+              ],
+            ),
           ),
-        ),
-      ),
-      errorWidget: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _getCategoryColor(widget.event.categories.firstOrNull),
-              _getCategoryColor(widget.event.categories.firstOrNull).withValues(alpha: 0.7),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Icon(
-            _getCategoryIcon(widget.event.categories.firstOrNull),
-            size: 120,
-            color: Colors.white.withValues(alpha: 0.3),
+          child: Center(
+            child: Icon(
+              _getCategoryIcon(widget.event.categories.firstOrNull),
+              size: 120,
+              color: Colors.white.withValues(alpha: 0.3),
+            ),
           ),
         ),
       ),

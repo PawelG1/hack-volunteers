@@ -55,3 +55,51 @@ class OrganizationError extends OrganizationState {
   @override
   List<Object?> get props => [message];
 }
+
+// Application States
+class ApplicationsLoading extends OrganizationState {}
+
+class ApplicationsLoaded extends OrganizationState {
+  final List<VolunteerApplication> applications;
+
+  const ApplicationsLoaded(this.applications);
+
+  @override
+  List<Object?> get props => [applications];
+}
+
+class ApplicationAccepted extends OrganizationState {
+  final VolunteerApplication application;
+
+  const ApplicationAccepted(this.application);
+
+  @override
+  List<Object?> get props => [application];
+}
+
+class ApplicationRejected extends OrganizationState {
+  final VolunteerApplication application;
+
+  const ApplicationRejected(this.application);
+
+  @override
+  List<Object?> get props => [application];
+}
+
+class AttendanceMarked extends OrganizationState {
+  final VolunteerApplication application;
+
+  const AttendanceMarked(this.application);
+
+  @override
+  List<Object?> get props => [application];
+}
+
+class VolunteerRated extends OrganizationState {
+  final String message;
+
+  const VolunteerRated(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

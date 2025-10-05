@@ -16,6 +16,8 @@ class VolunteerEvent extends Equatable {
   final String organization; // Nazwa organizacji (dla wyświetlania)
   final String? organizationId; // ID organizacji (opcjonalne dla starych eventów)
   final String location;
+  final double? latitude; // Szerokość geograficzna
+  final double? longitude; // Długość geograficzna
   final DateTime date;
   final DateTime? endDate; // Data zakończenia (opcjonalna)
   final int requiredVolunteers;
@@ -35,6 +37,8 @@ class VolunteerEvent extends Equatable {
     required this.organization,
     this.organizationId,
     required this.location,
+    this.latitude,
+    this.longitude,
     required this.date,
     this.endDate,
     required this.requiredVolunteers,
@@ -56,6 +60,8 @@ class VolunteerEvent extends Equatable {
         organization,
         organizationId,
         location,
+        latitude,
+        longitude,
         date,
         endDate,
         requiredVolunteers,
@@ -76,6 +82,8 @@ class VolunteerEvent extends Equatable {
     String? organization,
     String? organizationId,
     String? location,
+    double? latitude,
+    double? longitude,
     DateTime? date,
     DateTime? endDate,
     int? requiredVolunteers,
@@ -95,6 +103,8 @@ class VolunteerEvent extends Equatable {
       organization: organization ?? this.organization,
       organizationId: organizationId ?? this.organizationId,
       location: location ?? this.location,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       date: date ?? this.date,
       endDate: endDate ?? this.endDate,
       requiredVolunteers: requiredVolunteers ?? this.requiredVolunteers,

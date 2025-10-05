@@ -517,6 +517,7 @@ class _AddEventPageState extends State<AddEventPage> {
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         organization: _organizationController.text.trim(),
+        organizationId: 'sample-org', // TODO: Get from authenticated organization
         location: _locationController.text.trim(),
         date: _selectedDate,
         endDate: _selectedEndDate,

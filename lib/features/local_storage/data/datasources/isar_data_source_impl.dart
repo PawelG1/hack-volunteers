@@ -2,6 +2,9 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/volunteer_event_isar_model.dart';
 import '../models/user_interest_isar_model.dart';
+import '../models/user_isar_model.dart';
+import '../../../organizations/data/models/volunteer_application_model.dart';
+import '../../../organizations/data/models/certificate_model.dart';
 import 'isar_data_source.dart';
 
 /// Implementation of Isar data source
@@ -22,7 +25,13 @@ class IsarDataSourceImpl implements IsarDataSource {
     final dir = await getApplicationDocumentsDirectory();
 
     _isar = await Isar.open(
-      [VolunteerEventIsarModelSchema, UserInterestIsarModelSchema],
+      [
+        VolunteerEventIsarModelSchema,
+        UserInterestIsarModelSchema,
+        UserIsarModelSchema,
+        VolunteerApplicationModelSchema,
+        CertificateModelSchema,
+      ],
       directory: dir.path,
       name: 'hack_volunteers_db',
     );

@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../domain/entities/volunteer_event.dart';
 import '../../domain/repositories/events_repository.dart';
 import '../../../organizations/domain/entities/volunteer_application.dart';
+import '../../../organizations/data/datasources/organization_local_data_source.dart';
 import '../datasources/events_local_data_source.dart';
 import '../datasources/events_remote_data_source.dart';
 
@@ -12,11 +13,13 @@ import '../datasources/events_remote_data_source.dart';
 class EventsRepositoryImpl implements EventsRepository {
   final EventsRemoteDataSource remoteDataSource;
   final EventsLocalDataSource localDataSource;
+  final OrganizationLocalDataSource organizationLocalDataSource;
   final Uuid uuid = const Uuid();
 
   EventsRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.organizationLocalDataSource,
   });
 
   @override
@@ -24,32 +27,25 @@ class EventsRepositoryImpl implements EventsRepository {
     try {
       print('📱 VOLUNTEER REPO: Getting events...');
       
-      // First, try to get from local cache (Isar)
-      final cachedEvents = await localDataSource.getCachedEvents();
-      print('📱 VOLUNTEER REPO: Found ${cachedEvents.length} events in Isar');
-      
-      if (cachedEvents.isNotEmpty) {
-        // Return cached events if available
-        for (final event in cachedEvents) {
-          print('   - ${event.title} (id: ${event.id})');
-        }
-        return Right(cachedEvents);
-      }
-      
-      // If no cached events, try remote (for first-time users)
-      print('📱 VOLUNTEER REPO: No cached events, fetching from remote...');
+      // ALWAYS fetch from remote to get latest data (including images)
+      print('📱 VOLUNTEER REPO: Fetching from remote...');
       final remoteEvents = await remoteDataSource.getEvents();
       
-      // Cache the remote events
+      // Cache the remote events (this will update imageUrl fields)
       await localDataSource.cacheEvents(remoteEvents);
       print('📱 VOLUNTEER REPO: Cached ${remoteEvents.length} remote events');
+      
+      for (final event in remoteEvents) {
+        print('   - ${event.title} (id: ${event.id}, imageUrl: ${event.imageUrl})');
+      }
       
       return Right(remoteEvents);
     } catch (e) {
       print('📱 VOLUNTEER REPO: Error getting events: $e');
-      // If everything fails, try cache as last resort
+      // If remote fails, try cache as fallback
       try {
         final cachedEvents = await localDataSource.getCachedEvents();
+        print('📱 VOLUNTEER REPO: Using cached events: ${cachedEvents.length}');
         if (cachedEvents.isEmpty) {
           return const Left(CacheFailure('No cached events available'));
         }
@@ -119,23 +115,23 @@ class EventsRepositoryImpl implements EventsRepository {
       final allEvents = await localDataSource.getCachedEvents();
       final event = allEvents.firstWhere((e) => e.id == eventId);
 
-      // Create application with pending status
-      final application = VolunteerApplication(
-        id: uuid.v4(),
+      // Create and save application to database
+      final application = await organizationLocalDataSource.createApplication(
         eventId: eventId,
         volunteerId: volunteerId,
         organizationId: event.organizationId ?? 'unknown',
-        status: ApplicationStatus.pending,
         message: message,
-        appliedAt: DateTime.now(),
       );
 
-      // TODO: Save to local database and sync with backend
-      // For now, we'll just return the application
-      // In production: await localDataSource.saveApplication(application);
+      print('✅ Application created and saved: ${application.id}');
+      print('   Event: $eventId');
+      print('   Volunteer: $volunteerId');
+      print('   Organization: ${event.organizationId}');
+      print('   Status: ${application.status}');
 
       return Right(application);
     } catch (e) {
+      print('❌ Error applying for event: $e');
       return Left(CacheFailure(e.toString()));
     }
   }

@@ -54,6 +54,9 @@ abstract class AuthRepository {
   /// Update volunteer profile
   Future<Either<Failure, Volunteer>> updateVolunteerProfile(Volunteer volunteer);
 
+  /// Get current volunteer profile (synchronous, from cache)
+  Volunteer? getVolunteerProfile();
+
   /// Update organization profile
   Future<Either<Failure, Organization>> updateOrganizationProfile(
       Organization organization);

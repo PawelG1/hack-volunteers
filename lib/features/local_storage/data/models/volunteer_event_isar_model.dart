@@ -18,6 +18,8 @@ class VolunteerEventIsarModel {
   late String organization;
   String? organizationId;
   late String location;
+  double? latitude;
+  double? longitude;
 
   @Index()
   late DateTime date;
@@ -57,6 +59,8 @@ class VolunteerEventIsarModel {
       ..organization = model.organization
       ..organizationId = model.organizationId
       ..location = model.location
+      ..latitude = model.latitude
+      ..longitude = model.longitude
       ..date = model.date
       ..endDate = model.endDate
       ..requiredVolunteers = model.requiredVolunteers
@@ -81,6 +85,8 @@ class VolunteerEventIsarModel {
       organization: organization,
       organizationId: organizationId,
       location: location,
+      latitude: latitude,
+      longitude: longitude,
       date: date,
       endDate: endDate,
       requiredVolunteers: requiredVolunteers,

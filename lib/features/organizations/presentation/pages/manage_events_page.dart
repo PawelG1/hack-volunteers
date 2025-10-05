@@ -39,11 +39,7 @@ class _ManageEventsPageState extends State<ManageEventsPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Event created successfully')),
             );
-            // Reload events after creation
-            print('🔵 ManageEventsPage: Reloading events after creation');
-            context.read<OrganizationBloc>().add(
-              const LoadOrganizationEvents(organizationId: 'sample-org'),
-            );
+            // Don't reload here - BLoC already reloads automatically
           } else if (state is OrganizationError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Error: ${state.message}')),

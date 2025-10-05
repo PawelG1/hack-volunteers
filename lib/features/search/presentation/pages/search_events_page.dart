@@ -47,25 +47,50 @@ class _SearchEventsPageState extends State<SearchEventsPage> {
   Future<void> _loadEvents() async {
     setState(() => _isLoading = true);
     
-    // TODO: Replace with proper BLoC call
-    final remoteDataSource = EventsRemoteDataSourceImpl();
-    final eventsResult = await remoteDataSource.getEvents();
-    
-    setState(() {
-      _allEvents = eventsResult.map((model) => VolunteerEvent(
-        id: model.id,
-        title: model.title,
-        description: model.description,
-        organization: model.organization,
-        location: model.location,
-        date: model.date,
-        requiredVolunteers: model.requiredVolunteers,
-        categories: model.categories,
-        createdAt: model.createdAt,
-      )).toList();
-      _filteredEvents = _allEvents;
-      _isLoading = false;
-    });
+    try {
+      // TODO: Replace with proper BLoC call
+      final remoteDataSource = EventsRemoteDataSourceImpl();
+      final eventsResult = await remoteDataSource.getEvents();
+      
+      setState(() {
+        _allEvents = eventsResult.map((model) => VolunteerEvent(
+          id: model.id,
+          title: model.title,
+          description: model.description,
+          organization: model.organization,
+          organizationId: model.organizationId,
+          location: model.location,
+          latitude: model.latitude,
+          longitude: model.longitude,
+          date: model.date,
+          endDate: model.endDate,
+          requiredVolunteers: model.requiredVolunteers,
+          currentVolunteers: model.currentVolunteers,
+          categories: model.categories,
+          imageUrl: model.imageUrl,
+          contactEmail: model.contactEmail,
+          contactPhone: model.contactPhone,
+          status: model.status,
+          createdAt: model.createdAt,
+          updatedAt: model.updatedAt,
+        )).toList();
+        _filteredEvents = _allEvents;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('❌ Error loading events in search: $e');
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Błąd ładowania wydarzeń: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _performSearch() {
@@ -208,7 +233,10 @@ class _SearchEventsPageState extends State<SearchEventsPage> {
                                   ),
                                 );
                               },
-                              child: EventCard(event: event),
+                              child: EventCard(
+                                event: event,
+                                height: 300, // Compact height for search list
+                              ),
                             ),
                           );
                         },

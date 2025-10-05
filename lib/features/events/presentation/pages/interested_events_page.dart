@@ -12,7 +12,12 @@ import 'event_details_page.dart';
 
 /// Interested Events List - shows events user swiped right on
 class InterestedEventsPage extends StatefulWidget {
-  const InterestedEventsPage({super.key});
+  final bool showAppBar;
+  
+  const InterestedEventsPage({
+    super.key,
+    this.showAppBar = true,
+  });
 
   @override
   State<InterestedEventsPage> createState() => _InterestedEventsPageState();
@@ -70,24 +75,28 @@ class _InterestedEventsPageState extends State<InterestedEventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Moje zainteresowania'),
-        actions: [
-          if (_events != null && _events!.isNotEmpty)
+    if (widget.showAppBar) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Moje zainteresowania'),
+          actions: [
+            if (_events != null && _events!.isNotEmpty)
+              IconButton(
+                icon: const Icon(Icons.clear_all),
+                onPressed: _showClearAllDialog,
+                tooltip: 'Usuń wszystkie',
+              ),
             IconButton(
-              icon: const Icon(Icons.clear_all),
-              onPressed: _showClearAllDialog,
-              tooltip: 'Usuń wszystkie',
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadInterestedEvents,
             ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadInterestedEvents,
-          ),
-        ],
-      ),
-      body: _buildBody(),
-    );
+          ],
+        ),
+        body: _buildBody(),
+      );
+    } else {
+      return _buildBody();
+    }
   }
 
   Widget _buildBody() {

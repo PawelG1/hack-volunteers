@@ -10,6 +10,7 @@ import '../../features/organizations/presentation/pages/manage_events_page.dart'
 import '../../features/organizations/presentation/pages/applications_page.dart';
 import '../../features/organizations/presentation/bloc/organization_bloc.dart';
 import '../../features/coordinators/presentation/pages/coordinator_dashboard.dart';
+import '../../features/coordinators/presentation/bloc/coordinator_bloc.dart';
 import '../../injection_container.dart' as di;
 
 // Export UserRole so other files can use it
@@ -115,7 +116,10 @@ class AppRouter {
       GoRoute(
         path: '/coordinator',
         name: 'coordinator',
-        builder: (context, state) => const CoordinatorDashboard(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => di.sl<CoordinatorBloc>(),
+          child: const CoordinatorDashboard(),
+        ),
         routes: [
           GoRoute(
             path: 'students',

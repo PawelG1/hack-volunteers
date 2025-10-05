@@ -3,13 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/navigation/app_router.dart';
+import '../../../../core/widgets/mlody_krakow_footer.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../events/presentation/bloc/events_bloc.dart';
 import '../../../events/presentation/pages/events_swipe_screen.dart';
 import '../../../events/presentation/pages/interested_events_page.dart';
+import '../../../events/presentation/pages/events_calendar_page.dart';
 import '../../../events/domain/repositories/events_repository.dart';
 import '../../../search/presentation/pages/search_events_page.dart';
-import '../../../map/presentation/pages/map_events_page.dart';
+import '../../../map/presentation/pages/events_map_page.dart';
 import '../../../../injection_container.dart' as di;
+import 'edit_profile_page.dart';
+import 'my_certificates_page.dart';
+import '../bloc/volunteer_certificates_bloc.dart';
+import '../../domain/entities/volunteer_profile.dart';
+import '../../data/services/profile_storage_service.dart';
+import 'dart:io';
 
 /// Volunteer Dashboard with bottom navigation
 class VolunteerDashboard extends StatefulWidget {
@@ -21,6 +30,23 @@ class VolunteerDashboard extends StatefulWidget {
 
 class _VolunteerDashboardState extends State<VolunteerDashboard> {
   int _selectedIndex = 0;
+  final _profileStorage = ProfileStorageService();
+  VolunteerProfile? _profile;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final profile = await _profileStorage.loadProfile();
+    if (mounted) {
+      setState(() {
+        _profile = profile;
+      });
+    }
+  }
 
   Future<int> _getInterestedEventsCount() async {
     try {
@@ -104,7 +130,34 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Widget _buildMyEventsTab() {
-    return const InterestedEventsPage();
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Moje wydarzenia'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.list),
+                text: 'Lista',
+              ),
+              Tab(
+                icon: Icon(Icons.calendar_month),
+                text: 'Kalendarz',
+              ),
+            ],
+            indicatorColor: AppColors.primaryMagenta,
+            labelColor: AppColors.primaryMagenta,
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            InterestedEventsPage(showAppBar: false),
+            EventsCalendarPage(showAppBar: false),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchTab() {
@@ -112,7 +165,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Widget _buildMapTab() {
-    return const MapEventsPage();
+    return const EventsMapPage();
   }
 
   Widget _buildProfileTab() {
@@ -169,30 +222,82 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
               ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 60,
-                      color: AppColors.primaryMagenta,
-                    ),
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.white,
+                        backgroundImage: _profile?.profileImagePath != null
+                            ? FileImage(File(_profile!.profileImagePath!))
+                            : null,
+                        child: _profile?.profileImagePath == null
+                            ? Icon(
+                                Icons.person,
+                                size: 60,
+                                color: AppColors.primaryMagenta,
+                              )
+                            : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColors.primaryMagenta, width: 2),
+                          ),
+                          child: const Icon(
+                            Icons.verified,
+                            size: 16,
+                            color: AppColors.primaryGreen,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Jan Kowalski',
-                    style: TextStyle(
+                  Text(
+                    _profile?.name ?? 'Jan Kowalski',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'jan.kowalski@example.com',
-                    style: TextStyle(
+                  Text(
+                    _profile?.email ?? 'jan.kowalski@example.com',
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final result = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfilePage(),
+                        ),
+                      );
+                      
+                      // Reload profile if changes were saved
+                      if (result == true) {
+                        _loadProfile();
+                      }
+                    },
+                    icon: const Icon(Icons.edit, size: 18),
+                    label: const Text('Edytuj profil'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppColors.primaryMagenta,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                 ],
@@ -230,70 +335,51 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             ),
             const SizedBox(height: 24),
 
-            // Profile Options
-            _buildProfileOption(
-              icon: Icons.school_outlined,
-              title: 'Szkoła',
-              subtitle: 'Nie ustawiono',
-              onTap: () {},
-            ),
-            _buildProfileOption(
-              icon: Icons.star_outline,
-              title: 'Ocena',
-              subtitle: 'Brak ocen',
-              onTap: () {},
-            ),
-            _buildProfileOption(
-              icon: Icons.interests_outlined,
-              title: 'Zainteresowania',
-              subtitle: 'Dodaj swoje zainteresowania',
-              onTap: () {},
-            ),
-            
-            const SizedBox(height: 32),
-            
-            // Sponsor Section
+            // Achievements Section
+            _buildSectionHeader('Osiągnięcia', Icons.emoji_events),
+            const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade200),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Wsparcie dzięki',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/images/mlody_krakow_horizontal.png',
-                        height: 35,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Text(
-                            'Młody Kraków',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryMagenta,
-                            ),
-                          );
-                        },
+                      _buildAchievementBadge(
+                        icon: Icons.star,
+                        color: AppColors.accentOrange,
+                        label: 'Nowicjusz',
+                        isUnlocked: true,
+                      ),
+                      const SizedBox(width: 12),
+                      _buildAchievementBadge(
+                        icon: Icons.favorite,
+                        color: Colors.red,
+                        label: '10 wydarzeń',
+                        isUnlocked: false,
+                      ),
+                      const SizedBox(width: 12),
+                      _buildAchievementBadge(
+                        icon: Icons.workspace_premium,
+                        color: AppColors.primaryBlue,
+                        label: 'Ekspert',
+                        isUnlocked: false,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
-                    'Program wspierany przez Młody Kraków',
+                    'Zdobądź więcej odznak uczestnicząc w wydarzeniach!',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -302,6 +388,108 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: 24),
+
+            // Profile Options
+            _buildSectionHeader('Informacje', Icons.info_outline),
+            const SizedBox(height: 12),
+            _buildProfileOption(
+              icon: Icons.school_outlined,
+              title: 'Szkoła',
+              subtitle: _profile?.school ?? 'Nie ustawiono',
+              onTap: () async {
+                final result = await Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfilePage(),
+                  ),
+                );
+                if (result == true) _loadProfile();
+              },
+            ),
+            _buildProfileOption(
+              icon: Icons.star_outline,
+              title: 'Ocena',
+              subtitle: 'Brak ocen',
+              onTap: () {},
+            ),
+            _buildProfileOption(
+              icon: Icons.workspace_premium,
+              title: 'Moje Certyfikaty',
+              subtitle: 'Zobacz swoje osiągnięcia',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => di.sl<VolunteerCertificatesBloc>(),
+                      child: MyCertificatesPage(
+                        volunteerId: 'current-volunteer-id', // TODO: Get from auth
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            _buildProfileOption(
+              icon: Icons.interests_outlined,
+              title: 'Zainteresowania',
+              subtitle: _profile?.interests.isNotEmpty == true
+                  ? _profile!.interests.join(', ')
+                  : 'Dodaj swoje zainteresowania',
+              onTap: () async {
+                final result = await Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfilePage(),
+                  ),
+                );
+                if (result == true) _loadProfile();
+              },
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Logout button
+            _buildProfileOption(
+              icon: Icons.logout,
+              title: 'Wyloguj się',
+              subtitle: 'Zakończ sesję',
+              onTap: () {
+                // Show confirmation dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return AlertDialog(
+                      title: const Text('Wyloguj się'),
+                      content: const Text('Czy na pewno chcesz się wylogować?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          child: const Text('Anuluj'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            context.read<AuthBloc>().add(LogoutEvent());
+                            context.go('/login');
+                          },
+                          child: const Text('Wyloguj'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+            
+            const SizedBox(height: 32),
+            
+            // Sponsor Section
+            // Footer z informacją o wsparciu
+            const MlodyKrakowFooter(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
             ),
           ],
         ),
@@ -401,5 +589,58 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     );
   }
 
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 22, color: AppColors.primaryMagenta),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget _buildAchievementBadge({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required bool isUnlocked,
+  }) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isUnlocked ? color : Colors.grey.shade200,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 32,
+              color: isUnlocked ? Colors.white : Colors.grey.shade400,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              color: isUnlocked ? AppColors.textPrimary : Colors.grey.shade400,
+              fontWeight: isUnlocked ? FontWeight.w600 : FontWeight.normal,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
 }

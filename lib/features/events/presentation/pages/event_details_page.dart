@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/mlody_krakow_footer.dart';
 import '../../domain/entities/volunteer_event.dart';
 
 /// Event Details Page - shows full event information before applying
@@ -193,6 +194,14 @@ class EventDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                ),
+
+                // Footer z informacją o wsparciu
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: MlodyKrakowFooter(
+                    padding: EdgeInsets.zero,
                   ),
                 ),
 

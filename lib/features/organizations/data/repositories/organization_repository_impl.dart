@@ -7,13 +7,16 @@ import '../../../events/data/models/volunteer_event_model.dart';
 import '../../domain/entities/volunteer_application.dart';
 import '../../domain/entities/certificate.dart';
 import '../../domain/repositories/organization_repository.dart';
+import '../datasources/organization_local_data_source.dart';
 
 class OrganizationRepositoryImpl implements OrganizationRepository {
-  final EventsLocalDataSource localDataSource;
+  final EventsLocalDataSource eventsLocalDataSource;
+  final OrganizationLocalDataSource organizationLocalDataSource;
   final Uuid uuid = const Uuid();
 
   OrganizationRepositoryImpl({
-    required this.localDataSource,
+    required this.eventsLocalDataSource,
+    required this.organizationLocalDataSource,
   });
 
   @override
@@ -33,7 +36,7 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
 
       // Convert to model for data layer
       final eventModel = VolunteerEventModel.fromEntity(eventWithId);
-      await localDataSource.saveEvent(eventModel);
+      await eventsLocalDataSource.saveEvent(eventModel);
       return Right(eventWithId);
     } catch (e) {
       return Left(CacheFailure('Failed to create event: ${e.toString()}'));
@@ -45,7 +48,7 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
     try {
       final updatedEvent = event.copyWith(updatedAt: DateTime.now());
       final eventModel = VolunteerEventModel.fromEntity(updatedEvent);
-      await localDataSource.saveEvent(eventModel);
+      await eventsLocalDataSource.saveEvent(eventModel);
       return Right(updatedEvent);
     } catch (e) {
       return Left(CacheFailure('Failed to update event: ${e.toString()}'));
@@ -55,7 +58,7 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
   @override
   Future<Either<Failure, void>> deleteEvent(String eventId) async {
     try {
-      await localDataSource.deleteEvent(eventId);
+      await eventsLocalDataSource.deleteEvent(eventId);
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Failed to delete event: ${e.toString()}'));
@@ -66,43 +69,70 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
   Future<Either<Failure, List<VolunteerEvent>>> getOrganizationEvents(String organizationId) async {
     try {
       print('📋 REPO: Getting organization events for organizationId: $organizationId');
-      final allEventModels = await localDataSource.getAllEvents();
+      final allEventModels = await eventsLocalDataSource.getAllEvents();
       print('📋 REPO: Found ${allEventModels.length} total events in Isar');
       
       // Convert models to entities
       final allEvents = allEventModels.map((model) => model.toEntity()).toList();
       
-      // For now, return ALL events (later we'll add proper organization filtering)
-      // TODO: Filter by organizationId when we have proper organization management
-      print('📋 REPO: Returning all ${allEvents.length} events');
-      for (final event in allEvents) {
+      // Filter by organizationId
+      final organizationEvents = allEvents.where((event) {
+        return event.organizationId == organizationId;
+      }).toList();
+      
+      print('📋 REPO: Filtered to ${organizationEvents.length} events for organizationId: $organizationId');
+      for (final event in organizationEvents) {
         print('   - ${event.title} (id: ${event.id}, org: ${event.organization}, orgId: ${event.organizationId})');
       }
       
-      return Right(allEvents);
+      return Right(organizationEvents);
     } catch (e) {
       print('📋 REPO: Error getting organization events: $e');
       return Left(CacheFailure('Failed to get organization events: ${e.toString()}'));
     }
   }
 
-  // Mock implementations for other methods
+  // Application management methods
   @override
   Future<Either<Failure, List<VolunteerApplication>>> getEventApplications(String eventId) async {
-    // Mock implementation - return empty list for now
-    return const Right([]);
+    try {
+      print('📋 REPO: Getting applications for eventId: $eventId');
+      final applications = await organizationLocalDataSource.getApplicationsForEvent(eventId);
+      print('📋 REPO: Found ${applications.length} applications for event $eventId');
+      for (final app in applications) {
+        print('   - Application ${app.id}: volunteer=${app.volunteerId}, status=${app.status}');
+      }
+      return Right(applications);
+    } catch (e) {
+      print('📋 REPO: Error getting event applications: $e');
+      return Left(CacheFailure('Failed to get event applications: ${e.toString()}'));
+    }
   }
 
   @override
   Future<Either<Failure, List<VolunteerApplication>>> getOrganizationApplications(String organizationId) async {
-    // Mock implementation
-    return const Right([]);
+    try {
+      print('📋 REPO: Getting applications for organizationId: $organizationId');
+      final applications = await organizationLocalDataSource.getApplicationsByOrganization(organizationId);
+      print('📋 REPO: Found ${applications.length} applications for organization $organizationId');
+      for (final app in applications) {
+        print('   - Application ${app.id}: event=${app.eventId}, volunteer=${app.volunteerId}, status=${app.status}');
+      }
+      return Right(applications);
+    } catch (e) {
+      print('📋 REPO: Error getting organization applications: $e');
+      return Left(CacheFailure('Failed to get organization applications: ${e.toString()}'));
+    }
   }
 
   @override
   Future<Either<Failure, VolunteerApplication>> acceptApplication(String applicationId) async {
-    // Mock implementation
-    return Left(ServerFailure('Not implemented yet'));
+    try {
+      final application = await organizationLocalDataSource.acceptApplication(applicationId);
+      return Right(application);
+    } catch (e) {
+      return Left(CacheFailure('Failed to accept application: ${e.toString()}'));
+    }
   }
 
   @override
@@ -110,8 +140,15 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
     required String applicationId,
     String? rejectionReason,
   }) async {
-    // Mock implementation
-    return Left(ServerFailure('Not implemented yet'));
+    try {
+      final application = await organizationLocalDataSource.rejectApplication(
+        applicationId,
+        rejectionReason ?? 'No reason provided',
+      );
+      return Right(application);
+    } catch (e) {
+      return Left(CacheFailure('Failed to reject application: ${e.toString()}'));
+    }
   }
 
   @override
@@ -120,35 +157,17 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
     required int hoursWorked,
     String? feedback,
   }) async {
-    // Mock implementation
-    return Left(ServerFailure('Not implemented yet'));
-  }
-
-  @override
-  Future<Either<Failure, Certificate>> issueCertificate({
-    required String volunteerId,
-    required String eventId,
-    required int hoursWorked,
-    String? description,
-  }) async {
-    // Mock implementation
-    return Left(ServerFailure('Not implemented yet'));
-  }
-
-  @override
-  Future<Either<Failure, List<Certificate>>> getOrganizationCertificates(String organizationId) async {
-    // Mock implementation
-    return const Right([]);
-  }
-
-  @override
-  Future<Either<Failure, Map<String, dynamic>>> getOrganizationStatistics(String organizationId) async {
-    // Mock implementation
-    return const Right({
-      'totalEvents': 0,
-      'totalVolunteers': 0,
-      'totalHours': 0,
-    });
+    try {
+      final application = await organizationLocalDataSource.markAttendance(
+        applicationId: applicationId,
+        attended: true,
+        hoursWorked: hoursWorked,
+        feedback: feedback,
+      );
+      return Right(application);
+    } catch (e) {
+      return Left(CacheFailure('Failed to mark attendance: ${e.toString()}'));
+    }
   }
 
   @override
@@ -157,7 +176,68 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
     required double rating,
     String? comment,
   }) async {
-    // Mock implementation
-    return const Right(null);
+    try {
+      await organizationLocalDataSource.rateVolunteer(
+        applicationId: applicationId,
+        rating: rating,
+        feedback: comment,
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure('Failed to rate volunteer: ${e.toString()}'));
+    }
+  }
+
+  // Certificate methods - NOT IMPLEMENTED (Coordinator responsibility)
+  @override
+  Future<Either<Failure, Certificate>> issueCertificate({
+    required String volunteerId,
+    required String eventId,
+    required int hoursWorked,
+    String? description,
+  }) async {
+    return Left(ServerFailure('Organizations cannot issue certificates - only coordinators can'));
+  }
+
+  @override
+  Future<Either<Failure, List<Certificate>>> getOrganizationCertificates(String organizationId) async {
+    return Left(ServerFailure('Organizations cannot access certificates - only coordinators can'));
+  }
+
+  // Statistics
+  @override
+  Future<Either<Failure, Map<String, dynamic>>> getOrganizationStatistics(String organizationId) async {
+    try {
+      final applications = await organizationLocalDataSource.getApplicationsByOrganization(organizationId);
+      final events = await eventsLocalDataSource.getAllEvents();
+      
+      // Calculate statistics
+      final totalEvents = events.length;
+      final totalApplications = applications.length;
+      final acceptedApplications = applications.where((app) => 
+        app.status == ApplicationStatus.accepted || 
+        app.status == ApplicationStatus.attended
+      ).length;
+      final completedApplications = applications.where((app) => 
+        app.status == ApplicationStatus.completed
+      ).length;
+      
+      int totalHours = 0;
+      for (final app in applications) {
+        if (app.hoursWorked != null) {
+          totalHours += app.hoursWorked!;
+        }
+      }
+
+      return Right({
+        'totalEvents': totalEvents,
+        'totalApplications': totalApplications,
+        'acceptedApplications': acceptedApplications,
+        'completedApplications': completedApplications,
+        'totalHours': totalHours,
+      });
+    } catch (e) {
+      return Left(CacheFailure('Failed to get statistics: ${e.toString()}'));
+    }
   }
 }

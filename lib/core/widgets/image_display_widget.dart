@@ -28,6 +28,11 @@ class ImageDisplayWidget extends StatelessWidget {
       return placeholder ?? _buildDefaultPlaceholder();
     }
 
+    // Check if it's a Flutter asset
+    if (_isAssetPath(imagePath!)) {
+      return _buildAssetImage();
+    }
+
     // Check if it's a local file path
     if (_isLocalPath(imagePath!)) {
       return _buildLocalImage();
@@ -37,12 +42,30 @@ class ImageDisplayWidget extends StatelessWidget {
     return _buildNetworkImage();
   }
 
+  bool _isAssetPath(String path) {
+    // Check if path is a Flutter asset
+    return path.startsWith('assets/') || path.startsWith('packages/');
+  }
+
   bool _isLocalPath(String path) {
     // Check if path starts with common file path patterns
     return path.startsWith('/') || 
            path.startsWith('file://') ||
            path.contains('/data/user/') ||
            path.contains('/storage/emulated/');
+  }
+
+  Widget _buildAssetImage() {
+    return Image.asset(
+      imagePath!,
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (context, error, stackTrace) {
+        print('❌ Error loading asset image: $imagePath - $error');
+        return errorWidget ?? _buildDefaultPlaceholder();
+      },
+    );
   }
 
   Widget _buildLocalImage() {
