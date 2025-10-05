@@ -113,6 +113,14 @@ class _EventsMapPageState extends State<EventsMapPage> {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.hack_volunteers',
               maxZoom: 19,
+              // Additional headers for better compatibility
+              additionalOptions: const {
+                'User-Agent': 'SmokPomaga/1.0',
+              },
+              // Error tile placeholder
+              errorImage: const AssetImage('assets/images/logo.png'),
+              // Tile loading configuration
+              tileProvider: NetworkTileProvider(),
             ),
             
             // Event markers
